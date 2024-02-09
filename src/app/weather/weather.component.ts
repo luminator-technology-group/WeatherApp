@@ -7,7 +7,6 @@
 //   styleUrls: ['./weather.component.scss']
 // })
 // export class WeatherComponent implements OnInit {
-//   city = 'Stockholm';
 //   weatherData: any;
 
 //   constructor(private apiService: ApiService) { }
@@ -17,20 +16,13 @@
 //   }
 
 //   getWeather(): void {
-//     this.apiService.getWeather(this.city)
-//       .subscribe(
-//         data => {
-//           console.log('Received weather data:', data); // Wyświetl otrzymane dane przed ich przetworzeniem
-//           this.weatherData = data;
-//         },
-//         error => {
-//           console.error('Error fetching weather data:', error); // Wyświetl błąd, jeśli wystąpił
-//         }
-//       );
+//     this.apiService.getWeather()
+//       .subscribe(data => {
+//         this.weatherData = data;
+//         console.log(this.weatherData);
+//       });
 //   }
 // }
-
-
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 
@@ -41,31 +33,27 @@ import { ApiService } from '../api.service';
 })
 export class WeatherComponent implements OnInit {
   weatherData: any;
+  randomLatitude: number = 0; 
+  randomLongitude: number = 0; 
 
   constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
+    this.generateRandomCoordinates();
     this.getWeather();
   }
 
   getWeather(): void {
-    const randomLatitude = this.generateRandomLatitude();
-    const randomLongitude = this.generateRandomLongitude();
-
-    this.apiService.getWeather(randomLatitude, randomLongitude)
+    this.apiService.getWeather(this.randomLatitude, this.randomLongitude)
       .subscribe(data => {
         this.weatherData = data;
         console.log(this.weatherData);
       });
   }
 
-  private generateRandomLatitude(): number {
-    // Logika generowania losowej szerokości geograficznej
-    return Math.random() * (90 - (-90)) + (-90);
-  }
+  private generateRandomCoordinates(): void {
 
-  private generateRandomLongitude(): number {
-    // Logika generowania losowej długości geograficznej
-    return Math.random() * (180 - (-180)) + (-180);
+    this.randomLatitude = Math.random() * (90 - (-90)) + (-90);
+    this.randomLongitude = Math.random() * (180 - (-180)) + (-180);
   }
 }

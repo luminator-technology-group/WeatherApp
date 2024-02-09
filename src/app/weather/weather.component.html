@@ -1,7 +1,17 @@
-<div *ngIf="weatherData">
-    <!-- <h2>Weather in {{ city }}</h2> -->
-    <p>Temperature: {{ weatherData.temperature }}</p>
-    <p>Description: {{ weatherData.description }}</p>
-    <p>Humidity: {{ weatherData.humidity }}</p>
+ <!-- <div *ngIf="weatherData">
+    <h2>Weather in Location with Coordinates: {{ weatherData.coord[0] }}, {{ weatherData.coord[1] }}</h2>
+    <p>Temperature: {{ weatherData.temp }} °F</p>
+    <p>Humidity: {{ weatherData.humidity }} %</p>
+    <p>Wind: {{weatherData.windSpd}}</p>
   </div>
+  
+   -->
+
+   <div *ngIf="weatherData">
+    <h2>Weather in Location with Coordinates: {{ weatherData.coord[0] }}, {{ weatherData.coord[1] }}</h2>
+    <p>Temperature: {{ weatherData.temp }} °F</p>
+    <p>Humidity: {{ weatherData.humidity }} %</p>
+    <p>Wind: {{weatherData.windSpd}}</p>
+  </div>
+  
   
