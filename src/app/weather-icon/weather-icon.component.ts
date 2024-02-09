@@ -9,7 +9,8 @@ import { IconService } from '../icon.service';
 })
 export class WeatherIconComponent implements OnInit {
   weatherData: any;
-  weatherIconValue: number | undefined;
+  weatherIconValue: number | -1 = -1;
+
 
   constructor(private iconService: IconService) { }
 
@@ -30,35 +31,35 @@ export class WeatherIconComponent implements OnInit {
 
   getWeatherIconUrl(symbolValue: number): string {
     switch (symbolValue) {
-            case 1: return "Clear sky";
-            case 2: return "Nearly clear sky";
-            case 3: return "Variable cloudiness";
-            case 4: return "Halfclear sky";
-            case 5: return "Cloudy sky";
-            case 6: return "Overcast";
-            case 7: return "Fog";
-            case 8: return "Light rain showers";
-            case 9: return "Moderate rain showers";
-            case 10: return "Heavy rain showers";
-            case 11: return "Thunderstorm";
-            case 12: return "Light sleet showers";
-            case 13: return "Moderate sleet showers";
-            case 14: return "Heavy sleet showers";
-            case 15: return "Light snow showers";
-            case 16: return "Moderate snow showers";
-            case 17: return "Heavy snow showers";
-            case 18: return "Light rain";
-            case 19: return "Moderate rain";
-            case 20: return "Heavy rain";
-            case 21: return "Thunder";
-            case 22: return "Light sleet";
-            case 23: return "Moderate sleet";
-            case 24: return "Heavy sleet";
-            case 25: return "Light snowfall";
-            case 26: return "Moderate snowfall";
-            case 27: return "Heavy snowfall";
-            default: return "No data";
-          }
-          
+      case 1: return 'assets/1.png'; // Clear sky
+      case 2: return 'assets/2.png'; // Nearly clear sky
+      case 3: return 'assets/3.png'; // Variable cloudiness
+      case 4: return 'assets/4.png'; // Halfclear sky
+      case 5: return 'assets/5.png'; // Cloudy sky
+      case 6: return 'assets/6.png'; // Overcast
+      case 7: return 'assets/7.png'; // Fog
+      case 8: return 'assets/8.png'; // Light rain showers
+      case 9: return 'assets/9.png'; // Moderate rain showers
+      case 10: return 'assets/10.png'; // Heavy rain showers
+      case 11: return 'assets/11.png'; // Thunderstorm
+      case 12: return 'assets/12.png'; // Light sleet showers
+      case 13: return 'assets/13.png'; // Moderate sleet showers
+      case 14: return 'assets/14.png'; // Heavy sleet showers
+      case 15: return 'assets/15.png'; // Light snow showers
+      case 16: return 'assets/16.png'; // Moderate snow showers
+      case 17: return 'assets/17.png'; // Heavy snow showers
+      case 18: return 'assets/18.png'; // Light rain
+      case 19: return 'assets/19.png'; // Moderate rain
+      case 20: return 'assets/20.png'; // Heavy rain
+      case 21: return 'assets/21.png'; // Thunder
+      case 22: return 'assets/22.png'; // Light sleet
+      case 23: return 'assets/23.png'; // Moderate sleet
+      case 24: return 'assets/24.png'; // Heavy sleet
+      case 25: return 'assets/25.png'; // Light snowfall
+      case 26: return 'assets/26.png'; // Moderate snowfall
+      case 27: return 'assets/27.png'; // Heavy snowfall
+      default: return ''; // Pusty ciąg dla braku danych
+    }
   }
+  
 }
