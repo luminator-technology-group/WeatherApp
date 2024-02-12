@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 
@@ -27,7 +26,7 @@ export class WeatherComponent implements OnInit {
       });
   }
 
-  private generateRandomCoordinates(): void {
+  generateRandomCoordinates(): void {
     this.randomLatitude = Math.random() * 180 - 90;
     this.randomLongitude = Math.random() * 360 - 180;
   }

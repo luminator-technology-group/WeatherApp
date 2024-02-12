@@ -31,7 +31,7 @@ export class WeatherIconComponent implements OnInit {
       });
     }
 
-  private generateRandomCoordinates(): void {
+  generateRandomCoordinates(): void {
     // Generating random geographical coordinates
     this.randomLatitude = Math.random() * 180 - 90;
     this.randomLongitude = Math.random() * 360 - 180;
