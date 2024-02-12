@@ -1,3 +1,6 @@
+//witout lon and lat 
+
+
 // import { Component, OnInit } from '@angular/core';
 // import { ApiService } from '../api.service';
 
@@ -23,6 +26,10 @@
 //       });
 //   }
 // }
+
+
+//-------------------------------- with lon and lat 
+
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 

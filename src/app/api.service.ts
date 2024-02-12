@@ -1,3 +1,6 @@
+//-----------API without lon and lat in url
+
+
 // import { HttpClient } from '@angular/common/http';
 // import { Injectable } from '@angular/core';
 // import { Observable } from 'rxjs';
@@ -16,6 +19,11 @@
 //     return this.http.get(url);
 //   }
 // }
+
+
+
+//-----------API with lon and lat in url
+
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
