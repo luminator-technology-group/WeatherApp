@@ -1,11 +1,4 @@
-<!-- <div *ngIf="weatherData && weatherData.timeSeries && weatherData.timeSeries.length > 0">
-    <h2>Weather Symbol:</h2>
-    <img [src]="getWeatherIconUrl(weatherIconValue)" alt="Weather Icon">
-  </div>
-   -->
-
-   <div *ngIf="weatherIconValue !== -1">
-    <h2>Weather Symbol:</h2>
-    <img [src]="getWeatherIconUrl(weatherIconValue)" alt="Weather Icon">
-  </div>
-  
+<div *ngIf="weatherIconValue">
+  <h2>Weather Symbol:</h2>
+  <img [src]="getWeatherIconUrl(weatherIconValue.wsymb)" alt="Weather Icon">
+</div>
