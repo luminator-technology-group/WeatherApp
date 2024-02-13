@@ -4,14 +4,14 @@ import {HttpClientModule} from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { WeatherComponent } from './weather/weather.component';
-import { WeatherIconComponent } from './weather-icon/weather-icon.component';
+
+import { WeatherTemperatureComponent } from './weather-temperature/weather-temperature.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    WeatherComponent,
-    WeatherIconComponent
+
+    WeatherTemperatureComponent
   ],
   imports: [
     BrowserModule,
