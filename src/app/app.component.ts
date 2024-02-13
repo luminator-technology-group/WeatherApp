@@ -5,7 +5,6 @@ import { ApiService } from './api.service';
   selector: 'app-root',
   template: `
     <div>
-  
   <app-weather-temperature [weatherTemperature] = "weatherTemperature"></app-weather-temperature>
 </div>
   `,
