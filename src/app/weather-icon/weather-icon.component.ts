@@ -1,42 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../api.service';
+import { Component, Input } from '@angular/core';
+
 
 @Component({
   selector: 'app-weather-icon',
-  templateUrl: './weather-icon.component.html',
+  template: '<img [src]="getWeatherIconUrl(weatherIconValue)" alt="Weather Icon">',
   styleUrls: ['./weather-icon.component.scss']
 })
-export class WeatherIconComponent implements OnInit {
-  weatherData: any;
-  weatherIconValue: any;
-  randomLatitude: number = 0; 
-  randomLongitude: number = 0; 
+export class WeatherIconComponent  {
 
-  constructor(private apiService: ApiService) { }
+  @Input() weatherIconValue: number = 0; 
 
- 
-  ngOnInit(): void {
-    this.generateRandomCoordinates();
-    this.getWeather();
-  }
+ constructor() { }
 
-  getWeather(): void {
-    this.apiService.getWeather(this.randomLatitude, this.randomLongitude)
-      .subscribe(data => {
-        this.weatherData = data;
-        console.log(this.weatherData);
-        if (this.weatherData && this.weatherData.wsymb) {
-          this.weatherIconValue = this.weatherData;
-        }
-      });
-    }
 
-  generateRandomCoordinates(): void {
-    // Generating random geographical coordinates
-    this.randomLatitude = Math.random() * 180 - 90;
-    this.randomLongitude = Math.random() * 360 - 180;
-   
-  }
 
   getWeatherIconUrl(symbolValue: number): string {
     switch (symbolValue) {
