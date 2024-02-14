@@ -13,8 +13,6 @@ import { ApiService } from './api.service';
 export class AppComponent {
   title = 'WeatherApp';
   weatherData :any;
-  randomLatitude: number = 0;
-  randomLongitude: number = 0;
   weatherTemperature:number = 0;
 
 
@@ -25,9 +23,10 @@ export class AppComponent {
   }
 
   getWeather(): void {
-    this.apiService.getWeather(0,0)
+    this.apiService.getWeather()
     .subscribe(data =>{
       this.weatherData = data;
+      console.log(this.weatherData)
       this.weatherTemperature = this.weatherData.temp;
     })
   }
