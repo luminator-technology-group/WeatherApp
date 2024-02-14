@@ -10,7 +10,6 @@ export class WeatherIconComponent  {
 
   @Input() weatherIconValue: number = 0; 
 
- constructor() { }
 
 
 
