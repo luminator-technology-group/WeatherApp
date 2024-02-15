@@ -11,8 +11,8 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  getWeather(randomLatitude: number, randomLongitude: number): Observable<any> {
-    const url = `${this.apiUrl}/weather?lat=${randomLatitude}&lng=${randomLongitude}`;
+  getWeather(): Observable<any> {
+    const url = `${this.apiUrl}/weather`;
     return this.http.get(url);
   }
 }

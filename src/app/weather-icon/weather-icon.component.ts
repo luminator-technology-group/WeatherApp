@@ -4,7 +4,7 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'app-weather-icon',
   template: '<img [src]="getWeatherIconUrl(weatherIconValue)" alt="Weather Icon">',
-  styleUrls: ['./weather-icon.component.scss']
+  
 })
 export class WeatherIconComponent  {
 
