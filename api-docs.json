@@ -1,0 +1,198 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "Application API",
+      "version": "v1"
+    },
+    "servers": [
+      {
+        "url": "http://localhost/dynamic-weather/api",
+        "description": "Generated server url"
+      }
+    ],
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ],
+    "paths": {
+      "/weather/position": {
+        "get": {
+          "tags": [
+            "weather-controller"
+          ],
+          "operationId": "getPosition",
+          "parameters": [
+            {
+              "name": "lon",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "number",
+                "format": "double"
+              }
+            },
+            {
+              "name": "lat",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "number",
+                "format": "double"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/WeatherResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/weather/locations": {
+        "get": {
+          "tags": [
+            "weather-controller"
+          ],
+          "operationId": "getMultipleLocations",
+          "parameters": [
+            {
+              "name": "cityNames",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/LocationWeatherResponse"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/weather/location": {
+        "get": {
+          "tags": [
+            "weather-controller"
+          ],
+          "operationId": "getLocation",
+          "parameters": [
+            {
+              "name": "cityName",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/LocationWeatherResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "WeatherResponse": {
+          "type": "object",
+          "properties": {
+            "temp": {
+              "type": "number",
+              "format": "double"
+            },
+            "winDir": {
+              "type": "number",
+              "format": "double"
+            },
+            "winSpd": {
+              "type": "number",
+              "format": "double"
+            },
+            "pcat": {
+              "type": "number",
+              "format": "double"
+            },
+            "pmean": {
+              "type": "number",
+              "format": "double"
+            },
+            "wsymb": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        },
+        "LocationWeatherResponse": {
+          "type": "object",
+          "properties": {
+            "temp": {
+              "type": "number",
+              "format": "double"
+            },
+            "winDir": {
+              "type": "number",
+              "format": "double"
+            },
+            "winSpd": {
+              "type": "number",
+              "format": "double"
+            },
+            "cityName": {
+              "type": "string"
+            },
+            "pcat": {
+              "type": "number",
+              "format": "double"
+            },
+            "pmean": {
+              "type": "number",
+              "format": "double"
+            },
+            "wsymb": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    }
+  }
