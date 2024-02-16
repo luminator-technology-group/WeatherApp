@@ -2,13 +2,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
- import { environment } from '../environments/environment'; 
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = environment.apiBasePath;
+  private apiUrl = 'https://9f55a98d-9acb-483c-a248-f2abef55797f.mock.pstmn.io';
 
   constructor(private http: HttpClient) { }
 
