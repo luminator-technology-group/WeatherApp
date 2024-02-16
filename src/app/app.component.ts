@@ -6,7 +6,7 @@ import { ApiService } from './api.service';
 @Component({
   selector: 'app-root',
   template: `
-    <div>
+  <div class="weather-container">
   <app-weather-temperature [weatherTemperature] = "weatherTemperature"></app-weather-temperature>
   <app-weather-icon [weatherIconValue]="weatherIconValue"></app-weather-icon>
   <app-weather-wind [weatherWind]= "weatherWind"></app-weather-wind>
@@ -38,7 +38,7 @@ export class AppComponent  implements OnInit{
         console.log(this.weatherData);
   
         this.weatherTemperature = this.weatherData.temp;
-        this.weatherWind = this.weatherData.windSpd;
+        this.weatherWind = this.weatherData.winSpd;
         if (this.weatherData && this.weatherData.wsymb) {
           this.weatherIconValue = this.weatherData.wsymb;
         }
