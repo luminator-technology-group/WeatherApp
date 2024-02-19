@@ -22,10 +22,11 @@ steps:
   displayName: 'npm install and build'
 
 - task: Npm@1
-        displayName: Lint
-        inputs:
-          command: custom
-          customCommand: run lint
-          verbose: true
-        condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.Reason'], 'PullRequest'))
+  displayName: Lint
+  inputs:
+    command: custom
+    customCommand: run lint
+    verbose: true
+  condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.Reason'], 'PullRequest'))
+
 
