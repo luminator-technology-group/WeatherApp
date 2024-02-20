@@ -21,6 +21,14 @@ steps:
     ng build --configuration=production
   displayName: 'npm install and build'
 
+  
+  - task: Npm@1
+    displayName: Unit test
+    inputs:
+      command: 'custom'
+      customCommand: ' npm run test'
+
+
 - task: Npm@1
   displayName: Lint
   inputs:
@@ -28,5 +36,3 @@ steps:
     customCommand: run lint
     verbose: true
   condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.Reason'], 'PullRequest'))
-
-
