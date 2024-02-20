@@ -10,6 +10,6 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./weather-wind.component.scss']
 })
 export class WeatherWindComponent {
-@Input() weatherWind: number = 0
+@Input() weatherWind = 0
 
 }
