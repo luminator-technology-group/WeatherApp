@@ -22,9 +22,9 @@ steps:
   displayName: 'npm install and build'
 
   
-  - task: Npm@1
-    displayName: Unit test
-    inputs:
+- task: Npm@1
+  displayName: Unit test
+  inputs:
       command: 'custom'
       customCommand: ' npm run test'
 
