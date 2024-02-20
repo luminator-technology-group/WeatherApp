@@ -26,7 +26,7 @@ steps:
   displayName: Unit test
   inputs:
       command: 'custom'
-      customCommand: ' npm run test'
+      customCommand: 'run test'
 
 
 - task: Npm@1
