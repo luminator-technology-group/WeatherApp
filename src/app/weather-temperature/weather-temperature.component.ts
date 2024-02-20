@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./weather-temperature.component.scss']
 })
 export class WeatherTemperatureComponent {
-  @Input()  weatherTemperature: number = 0;
+  @Input()  weatherTemperature = 0;
 
 
 }
