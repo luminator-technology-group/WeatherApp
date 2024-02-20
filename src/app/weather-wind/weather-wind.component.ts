@@ -5,7 +5,7 @@ import { Component, Input } from '@angular/core';
   template: `
   <div class="wind-container">
     <img class="wind-icon" src="/assets/wind.svg" alt="wind" />
-    <p> {{weatherWind}} m/s </p>
+    <p> {{weatherWind | number : "1.0-0"}} m/s </p>
   </div>`,
   styleUrls: ['./weather-wind.component.scss']
 })
