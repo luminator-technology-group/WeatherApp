@@ -9,7 +9,7 @@ import { Component, Input } from '@angular/core';
 })
 export class WeatherIconComponent  {
 
-  @Input() weatherIconValue: number = 0; 
+  @Input() weatherIconValue = 0; 
 
 
 
