@@ -6,29 +6,49 @@
 trigger:
   - master
 
+variables:
+  - name: DOCKER_BUILDKIT
+    value: 1
+  - name: ContainerRegistry.Name
+    value: mSET Suite Dev Germany West Central ACR 02
+  - name: ContainerRegistry.Url
+    value: lumsetsuitedevgwcacr02.azurecr.io
+  - name: NpmFeed
+    value: 0993c973-a0a3-41c9-acbf-fca1ecf95883/d11ab0f1-e9d8-4188-b43a-7fdc976862de
+  - name: Build.DateTime
+    value: $[format('{0:yyyy}-{0:MM}-{0:dd} {0:HH}:{0:mm}:{0:ss}', pipeline.startTime)]
+  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/') }}:
+      - name: BuildBaseName
+        value: ci-${{ replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), '/', '-') }}
+  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/') }}:
+      - name: BuildBaseName
+        value: ${{ replace(replace(variables['Build.SourceBranch'], 'refs/tags/', ''), '/', '-') }}
+  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/pull/') }}:
+      - name: BuildBaseName
+        value: pr-${{ replace(replace(variables['Build.SourceBranch'], 'refs/pull/', ''), '/merge', '') }}
+
+
 pool:
   vmImage: ubuntu-latest
 
 steps:
   - task: NodeTool@0
     inputs:
-      versionSpec: "20.x"
-    displayName: "Install Node.js"
+      versionSpec: '20.x'
+    displayName: 'Install Node.js'
 
-  - script: npm install -g @angular/cli
+  - script: |
+      npm install -g @angular/cli
+      npm install
+      ng build --configuration=production
     displayName: 'npm install and build'
 
-  - script:  npm install
-    displayName: 'npm install and build'
-
-  - script:  ng build --configuration=production
-    displayName: 'npm install and build'
-
+    
   - task: Npm@1
     displayName: Unit test
     inputs:
-      command: "custom"
-      customCommand: "run test"
+        command: 'custom'
+        customCommand: 'run test'
 
   - task: Npm@1
     displayName: Lint
@@ -38,4 +58,9 @@ steps:
       verbose: true
     condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.Reason'], 'PullRequest'))
 
-       
+  - task: Npm@1
+    displayName: npm install
+    inputs:
+      command: install
+      customRegistry: useFeed
+      customFeed: $(NpmFeed)
