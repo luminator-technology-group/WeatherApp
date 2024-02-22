@@ -15,6 +15,9 @@ steps:
       versionSpec: "20.x"
     displayName: "Install Node.js"
 
+  - task: npmAuthenticate@0
+    inputs:
+      workingFile: .npmrc
 
   - task: Npm@1
     displayName: Install @angular/cli
