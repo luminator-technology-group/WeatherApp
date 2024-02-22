@@ -25,13 +25,13 @@ jobs:
         displayName: "Install Angular CLI"
 
       - task: Npm@1
+        displayName: NPM Install
         inputs:
           command: install
           customFeed: $(NpmFeed)
 
       - script: npm run lint
         displayName: "Check Linting"
-
 
       - script: npm run test:ci
         displayName: "Run Unittests"
