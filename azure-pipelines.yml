@@ -4,35 +4,28 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- master
+  - master
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '20.x'
-  displayName: 'Install Node.js'
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "20.x"
+    displayName: "Install Node.js"
 
-- script: |
-    npm install -g @angular/cli
-    npm install
-    ng build --configuration=production
-  displayName: 'npm install and build'
+  - script: npm install -g @angular/cli
+    displayName: "Install Angular CLI"
 
-  
-- task: Npm@1
-  displayName: Unit test
-  inputs:
-      command: 'custom'
-      customCommand: 'run test'
+  - script: npm install
+    displayName: "NPM Install"
 
+  - script: npm run lint
+    displayName: "Check Linting"
 
-- task: Npm@1
-  displayName: Lint
-  inputs:
-    command: custom
-    customCommand: run lint
-    verbose: true
-  condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.Reason'], 'PullRequest'))
+  - script: npm run test:ci
+    displayName: "Run Unittests"
+
+  - script: npm run build
+    displayName: "Build"

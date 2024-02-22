@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration=production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --code-coverage",
     "generate-api-clients": "openapi-generator-cli generate -g typescript-angular -i api-docs.json -o generated/api-clients",
