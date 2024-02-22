@@ -15,21 +15,19 @@ steps:
       versionSpec: "20.x"
     displayName: "Install Node.js"
 
+
   - task: Npm@1
     displayName: Install @angular/cli
     inputs:
       command: custom
       customCommand: install -g @angular/cli
-      customRegistry: useFeed
-      customFeed: $(NpmFeed)
+      
 
   - task: Npm@1
     displayName: npm install
     inputs:
       command: install
-      customRegistry: useFeed
-      customFeed: $(NpmFeed)
-
+         
   - task: Npm@1
     displayName: Unit test
     inputs:
@@ -49,5 +47,4 @@ steps:
     inputs:
       command: custom
       customCommand: ng build --configuration=production
-      customRegistry: useFeed
-      customFeed: $(NpmFeed)
+       
