@@ -6,6 +6,28 @@
 trigger:
   - master
 
+variables:
+  - name: DOCKER_BUILDKIT
+    value: 1
+  - name: ContainerRegistry.Name
+    value: mSET Suite Dev Germany West Central ACR 02
+  - name: ContainerRegistry.Url
+    value: lumsetsuitedevgwcacr02.azurecr.io
+  - name: NpmFeed
+    value: 0993c973-a0a3-41c9-acbf-fca1ecf95883/d11ab0f1-e9d8-4188-b43a-7fdc976862de
+  - name: Build.DateTime
+    value: $[format('{0:yyyy}-{0:MM}-{0:dd} {0:HH}:{0:mm}:{0:ss}', pipeline.startTime)]
+  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/') }}:
+      - name: BuildBaseName
+        value: ci-${{ replace(replace(variables['Build.SourceBranch'], 'refs/heads/', ''), '/', '-') }}
+  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/') }}:
+      - name: BuildBaseName
+        value: ${{ replace(replace(variables['Build.SourceBranch'], 'refs/tags/', ''), '/', '-') }}
+  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/pull/') }}:
+      - name: BuildBaseName
+        value: pr-${{ replace(replace(variables['Build.SourceBranch'], 'refs/pull/', ''), '/merge', '') }}
+
+
 pool:
   vmImage: ubuntu-latest
 
@@ -15,21 +37,21 @@ steps:
       versionSpec: "20.x"
     displayName: "Install Node.js"
 
-  - task: npmAuthenticate@0
-    inputs:
-      workingFile: .npmrc
-
   - task: Npm@1
     displayName: Install @angular/cli
     inputs:
       command: custom
       customCommand: install -g @angular/cli
+      customRegistry: useFeed
+      customFeed: $(NpmFeed)
       
 
   - task: Npm@1
     displayName: npm install
     inputs:
       command: install
+      customRegistry: useFeed
+      customFeed: $(NpmFeed)
          
   - task: Npm@1
     displayName: Unit test
