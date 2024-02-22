@@ -4,42 +4,50 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- master
+  - master
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '20.x'
-  displayName: 'Install Node.js'
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "20.x"
+    displayName: "Install Node.js"
 
-- script: |
-    npm install -g @angular/cli
-    npm install
-    ng build --configuration=production
-  displayName: 'npm install and build'
+  - task: Npm@1
+    displayName: Install @angular/cli
+    inputs:
+      command: custom
+      customCommand: npm install -g @angular/cli
+      customRegistry: useFeed
+      customFeed: $(NpmFeed)
 
-  
-- task: Npm@1
-  displayName: Unit test
-  inputs:
-      command: 'custom'
-      customCommand: 'run test'
-
-
-- task: Npm@1
-  displayName: Lint
-  inputs:
-    command: custom
-    customCommand: run lint
-    verbose: true
-  condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.Reason'], 'PullRequest'))
-
-- task: Npm@1
-  displayName: npm install
-  inputs:
+  - task: Npm@1
+    displayName: npm install
+    inputs:
       command: install
+      customRegistry: useFeed
+      customFeed: $(NpmFeed)
+
+  - task: Npm@1
+    displayName: Unit test
+    inputs:
+      command: "custom"
+      customCommand: "run test"
+
+  - task: Npm@1
+    displayName: Lint
+    inputs:
+      command: custom
+      customCommand: run lint
+      verbose: true
+    condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.Reason'], 'PullRequest'))
+
+  - task: Npm@1
+    displayName: Build
+    inputs:
+      command: custom
+      customCommand: ng build --configuration=production
       customRegistry: useFeed
       customFeed: $(NpmFeed)
