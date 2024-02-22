@@ -1,31 +1,40 @@
-# Node.js with Angular
-# Build a Node.js project that uses Angular.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+name: WeatherAppLayout
+
+variables:
+  name: NpmFeed
+  value: 0995c973-a0a3-41c9-acbf-fca1ecf95883/d11ab0f1-e9d8-4188-b43a-7fdc976862de
 
 trigger:
   - master
 
-pool:
-  vmImage: ubuntu-latest
+jobs:
+  - job: Default
+    pool:
+      vmImage: ubuntu-22.04
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "20.x"
+        displayName: "Install Node.js"
 
-steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: "20.x"
-    displayName: "Install Node.js"
+      - task: npmAuthenticate@0
+        inputs:
+          workingFile: .npmrc
 
-  - script: npm install -g @angular/cli
-    displayName: "Install Angular CLI"
+      - script: npm install -g @angular/cli
+        displayName: "Install Angular CLI"
 
-  - script: npm install
-    displayName: "NPM Install"
+      - task: Npm@1
+        inputs:
+          command: install
+          customFeed: $(NpmFeed)
 
-  - script: npm run lint
-    displayName: "Check Linting"
+      - script: npm run lint
+        displayName: "Check Linting"
 
-  - script: npm run test:ci
-    displayName: "Run Unittests"
 
-  - script: npm run build
-    displayName: "Build"
+      - script: npm run test:ci
+        displayName: "Run Unittests"
+
+      - script: npm run build
+        displayName: "Build"
