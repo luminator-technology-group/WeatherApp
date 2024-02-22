@@ -36,3 +36,10 @@ steps:
     customCommand: run lint
     verbose: true
   condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.Reason'], 'PullRequest'))
+
+- task: Npm@1
+  displayName: npm install
+  inputs:
+      command: install
+      customRegistry: useFeed
+      customFeed: $(NpmFeed)
