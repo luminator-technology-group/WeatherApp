@@ -19,7 +19,7 @@ steps:
     displayName: Install @angular/cli
     inputs:
       command: custom
-      customCommand: npm install -g @angular/cli
+      customCommand: install -g @angular/cli
       customRegistry: useFeed
       customFeed: $(NpmFeed)
 
