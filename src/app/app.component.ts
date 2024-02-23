@@ -35,7 +35,6 @@ export class AppComponent  implements OnInit{
 
   ngOnInit(){
     //this.getWeather();
-    
     this.initConnection();
   }
 
