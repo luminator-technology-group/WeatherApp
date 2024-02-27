@@ -38,3 +38,4 @@ jobs:
 
       - script: npm run build
         displayName: "Build"
+
