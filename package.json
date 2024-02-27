@@ -30,6 +30,8 @@
 
     "@msetsuite/libpis": "^0.0.993",
 
+    "paho-mqtt": "^1.1.0",
+
     "prettier": "^3.2.5",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
@@ -46,6 +48,7 @@
     "@angular/compiler-cli": "^16.2.0",
     "@openapitools/openapi-generator-cli": "^2.9.0",
     "@types/jasmine": "~4.3.0",
+    "@types/paho-mqtt": "^1.0.10",
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
     "eslint": "^8.51.0",
