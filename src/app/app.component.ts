@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from './api.service';
 import { environment } from 'src/environments/environment';
-import { WindowWithPIS } from '@msetsuite/libpis/main';
 import { LuminatorWindow } from './app.model';
 import { StopListService } from './stop-list.service';
+
+//mport { WindowWithPIS } from '@msetsuite/libpis/main';
 
 @Component({
   selector: 'app-root',

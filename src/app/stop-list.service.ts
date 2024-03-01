@@ -6,7 +6,6 @@ import { Injectable } from '@angular/core';
 export class StopListService {
   private stops: any[] = [];
 
-  constructor() {}
 
   updateStops(stops: any[]): void {
     this.stops = stops;
