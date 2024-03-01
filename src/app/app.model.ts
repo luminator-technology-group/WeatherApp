@@ -1,12 +1,44 @@
-import { InitParams } from "@msetsuite/libpis";
+export type LibPisState =
+  | 'Normal'
+  | 'Fallback'
+  | 'RecoverableError'
+  | 'PermanentError'
+  | 'Startup';
+
+export interface MQTTConfiguration {
+  hostname: string;
+  port: number;
+  username?: string;
+  password?: string;
+  lastWillTopic?: string;
+  lastWillPayload?: Record<string, unknown>;
+  lastWillRetain?: boolean;
+  lastWillQos?: number;
+}
+
+export interface InitParams {
+  displayId: string;
+  externalConfig?: MQTTConfiguration;
+  decrementCallSequenceOnArrival?: boolean;
+  preview?: boolean;
+}
 
 export interface LuminatorWindow extends Window {
-    luminator: {
-      pis: {
-        client: any;
-        init({
-               displayId, externalConfig, decrementCallSequenceOnArrival, preview,
-             }: InitParams): void
-      };
+  luminator: {
+    pis: {
+      client: any;
+      init({
+        displayId,
+        externalConfig,
+        decrementCallSequenceOnArrival,
+        preview,
+      }: InitParams): void;
     };
-  }
+  };
+}
+
+export interface Stop {
+  name: string;
+  lineNumber: number;
+  // Define other properties as needed
+}

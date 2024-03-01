@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  moquitto:
+    container_name: docker-mosquitto-broker
+    ports:
+      - "127.0.0.1:1883:1883"
+      - "127.0.0.1:1884:1884"
+    build:
+      context: .
+
