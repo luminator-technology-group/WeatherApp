@@ -7,13 +7,15 @@ import { AppComponent } from './app.component';
 import { WeatherWindComponent } from './weather-wind/weather-wind.component';
 import { WeatherTemperatureComponent } from './weather-temperature/weather-temperature.component';
 import { WeatherIconComponent } from './weather-icon/weather-icon.component';
+import { LatLngComponent } from './lat-lng/lat-lng.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     WeatherWindComponent,
     WeatherTemperatureComponent,
-    WeatherIconComponent
+    WeatherIconComponent,
+    LatLngComponent
 
   ],
   imports: [
