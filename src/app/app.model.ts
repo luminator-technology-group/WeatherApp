@@ -42,5 +42,3 @@ export interface Stop {
   lineNumber: number;
   // Define other properties as needed
 }
-
-//extends Window

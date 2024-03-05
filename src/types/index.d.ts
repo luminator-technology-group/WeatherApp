@@ -1,4 +1,4 @@
-import { InitParams, LuminatorWindow } from '../app/app.model';
+import { InitParams} from '../app/app.model';
 
 export {};
 
