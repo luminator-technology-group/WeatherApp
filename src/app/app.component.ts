@@ -3,16 +3,22 @@ import { ApiService } from './api.service';
 import { environment } from 'src/environments/environment';
 import { LuminatorWindow } from './app.model';
 import { CoordinatesService } from './coordinates.service';
+import { StopListService } from './stop-list.service';
 
 @Component({
   selector: 'app-root',
   template: `
     <div class="weather-container">
-       <app-weather-temperature [weatherTemperature]="weatherTemperature"></app-weather-temperature>
-      <app-weather-icon [weatherIconValue]="weatherIconValue"></app-weather-icon>
+      <app-weather-temperature
+        [weatherTemperature]="weatherTemperature"
+      ></app-weather-temperature>
+      <app-weather-icon
+        [weatherIconValue]="weatherIconValue"
+      ></app-weather-icon>
       <app-weather-wind [weatherWind]="weatherWind"></app-weather-wind>
       <app-lat-lng [coordinates]="coordinates"></app-lat-lng>
     </div>
+    <app-stop-list [stops]="stops"></app-stop-list>
   `,
   styleUrls: ['./app.component.scss'],
 })
@@ -23,6 +29,7 @@ export class AppComponent implements OnInit {
   weatherTemperature = 0;
   weatherIconValue = 0;
   state: any;
+  stops: any[] = []; // Array to store stop data
   latitude = 0;
   longitude = 0;
   mqttConfig = environment.mqtt;
@@ -32,6 +39,8 @@ export class AppComponent implements OnInit {
   constructor(
     private apiService: ApiService,
     private coordinatesService: CoordinatesService,
+    private stopListService: StopListService,
+
   ) {}
 
   ngOnInit(): void {
@@ -60,7 +69,8 @@ export class AppComponent implements OnInit {
         next: (state: any) => {
           if (state && state.stopList) {
             console.log('LIBPIS DATA', state.stopList);
-            this.handleCoordinates(state);
+            this.handleCoordinates(state); 
+            this.handleStopListData(state);
           } else {
             console.log('Waiting for data...');
           }
@@ -84,5 +94,24 @@ export class AppComponent implements OnInit {
       console.log('StopList is either undefined or empty');
       this.coordinates = []; 
     }
+          console.log('LIBPIS DATA', state);
+         
+        }
+  
+
+  // get stopList
+
+  handleStopListData(state: any): void {
+    const parsedStopList = this.parseStopList(state.stopList);
+    console.log('Parsed stop list:', parsedStopList);
+
+    // Update stop list
+    this.stops = parsedStopList;
+    this.stopListService.updateStops(parsedStopList);
+  }
+
+  parseStopList(stopList: any): any[] {
+    return stopList; // By default, it returns the unprocessed stop list
+
   }
 }

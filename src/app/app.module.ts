@@ -8,6 +8,8 @@ import { WeatherWindComponent } from './weather-wind/weather-wind.component';
 import { WeatherTemperatureComponent } from './weather-temperature/weather-temperature.component';
 import { WeatherIconComponent } from './weather-icon/weather-icon.component';
 import { LatLngComponent } from './lat-lng/lat-lng.component';
+import { StoplistComponent } from './stop-list/stop-list.component';
+
 
 @NgModule({
   declarations: [
@@ -15,8 +17,8 @@ import { LatLngComponent } from './lat-lng/lat-lng.component';
     WeatherWindComponent,
     WeatherTemperatureComponent,
     WeatherIconComponent,
-    LatLngComponent
-
+    LatLngComponent,
+    StoplistComponent,
   ],
   imports: [
     BrowserModule,
