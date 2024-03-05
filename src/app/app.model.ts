@@ -23,7 +23,7 @@ export interface InitParams {
   preview?: boolean;
 }
 
-export interface LuminatorWindow extends Window {
+export interface LuminatorWindow  {
   luminator: {
     pis: {
       client: any;
@@ -42,3 +42,5 @@ export interface Stop {
   lineNumber: number;
   // Define other properties as needed
 }
+
+//extends Window

@@ -60,46 +60,26 @@ export class AppComponent implements OnInit {
   }
 
   // connectet libpis with mqtt broker - Please check if this connection is okay I'm not sure about this code.
-  // initConnection(): void {
-  //   (window as Window as LuminatorWindow).luminator.pis.init(this.mqttConfig);
+  initConnection() {
+    (window as Window as LuminatorWindow).luminator.pis.init(this.mqttConfig);
 
-  //   (window as Window as LuminatorWindow).luminator.pis.client
-  //     .updates()
-  //     .subscribe({
-  //       next: (state: any) => {
-  //         if (state && state.stopList) {
-  //           console.log('LIBPIS DATA', state.stopList);
-  //           this.handleCoordinates(state); 
-  //           this.handleStopListData(state);
-  //         } else {
-  //           console.log('Waiting for data...');
-  //         }
-  //       },
-  //       error: (error: any) => {
-  //         console.error('Error occurred while fetching data:', error);
-  //       },
-  //     });
-  // }
-  initConnection(): void {
-    const { luminator: { pis } } = window as Window as LuminatorWindow;
-  
-    pis.init(this.mqttConfig);
-    pis.client.updates().subscribe({
-      next: (state: any) => {
-        if (state && state.stopList) {
-          console.log('LIBPIS DATA', state.stopList);
-          this.handleCoordinates(state); 
-          this.handleStopListData(state);
-        } else {
-          console.log('Waiting for data...');
-        }
-      },
-      error: (error: any) => {
-        console.error('Error occurred while fetching data:', error);
-      },
-    });
+    (window as Window as LuminatorWindow).luminator.pis.client
+      .updates()
+      .subscribe({
+        next: (state: any) => {
+          if (state && state.stopList) {
+            console.log('LIBPIS DATA', state.stopList);
+            this.handleCoordinates(state); 
+            this.handleStopListData(state);
+          } else {
+            console.log('Waiting for data...');
+          }
+        },
+        error: (error: any) => {
+          console.error('Error occurred while fetching data:', error);
+        },
+      });
   }
-
 
  // read Latitude and Longitude
   handleCoordinates(state: any): void {
