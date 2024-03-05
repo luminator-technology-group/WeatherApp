@@ -5,16 +5,12 @@ import { Injectable } from '@angular/core';
 })
 export class CoordinatesService {
 
-  constructor() { }
 
-  processCoordinates(stopList: any[]): { latitude: number, longitude: number } | null {
-    if ( stopList && stopList.length > 0) {
-      const latitude = stopList[0].latitude;
-      const longitude = stopList[0].longitude;
-      return { latitude, longitude}
-    }else {
-    return null
-  
-  } 
+  processCoordinates(stopList: any[]): { latitude: number, longitude: number }[] | null {
+    if (stopList && stopList.length > 0) {
+      return stopList.map(item => ({ latitude: item.latitude, longitude: item.longitude }));
+    } else {
+      return null;
+    }
   }
 }
