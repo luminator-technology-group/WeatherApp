@@ -61,9 +61,9 @@ export class AppComponent implements OnInit {
 
   // connectet libpis with mqtt broker - Please check if this connection is okay I'm not sure about this code.
   initConnection() {
-    (window as Window as LuminatorWindow).luminator.pis.init(this.mqttConfig);
-
-    (window as Window as LuminatorWindow).luminator.pis.client
+    window.luminator.pis.init(this.mqttConfig);
+    
+    window.luminator.pis.client
       .updates()
       .subscribe({
         next: (state: any) => {
