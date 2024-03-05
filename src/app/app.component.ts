@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from './api.service';
 import { environment } from 'src/environments/environment';
 import { LuminatorWindow } from './app.model';
+import { CoordinatesService } from './coordinates.service';
 import { StopListService } from './stop-list.service';
-
-//mport { WindowWithPIS } from '@msetsuite/libpis/main';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +16,7 @@ import { StopListService } from './stop-list.service';
         [weatherIconValue]="weatherIconValue"
       ></app-weather-icon>
       <app-weather-wind [weatherWind]="weatherWind"></app-weather-wind>
+      <app-lat-lng [coordinates]="coordinates"></app-lat-lng>
     </div>
     <app-stop-list [stops]="stops"></app-stop-list>
   `,
@@ -28,16 +28,19 @@ export class AppComponent implements OnInit {
   weatherWind = 0;
   weatherTemperature = 0;
   weatherIconValue = 0;
-  randomLatitude = 0;
-  randomLongitude = 0;
   state: any;
   stops: any[] = []; // Array to store stop data
-
+  latitude = 0;
+  longitude = 0;
   mqttConfig = environment.mqtt;
+  coordinates: { latitude: number; longitude: number; }[] =[];
+
 
   constructor(
     private apiService: ApiService,
+    private coordinatesService: CoordinatesService,
     private stopListService: StopListService,
+
   ) {}
 
   ngOnInit(): void {
@@ -58,19 +61,44 @@ export class AppComponent implements OnInit {
 
   // connectet libpis with mqtt broker - Please check if this connection is okay I'm not sure about this code.
   initConnection() {
-    (window as Window as LuminatorWindow).luminator.pis.init(
-      this.mqttConfig,
-    );
-
-    (window as Window as LuminatorWindow).luminator.pis.client
+    window.luminator.pis.init(this.mqttConfig);
+    
+    window.luminator.pis.client
       .updates()
       .subscribe({
         next: (state: any) => {
-          console.log('LIBPIS DATA', state);
-          this.handleStopListData(state);
+          if (state && state.stopList) {
+            console.log('LIBPIS DATA', state.stopList);
+            this.handleCoordinates(state); 
+            this.handleStopListData(state);
+          } else {
+            console.log('Waiting for data...');
+          }
+        },
+        error: (error: any) => {
+          console.error('Error occurred while fetching data:', error);
         },
       });
   }
+
+ // read Latitude and Longitude
+  handleCoordinates(state: any): void {
+    if (state.stopList && state.stopList.length > 0) {
+      const coordinate = this.coordinatesService.processCoordinates(state.stopList);
+      if (coordinate) {
+        this.coordinates = coordinate;
+      } else {
+        console.log('Failed to process coordinates.');
+        this.coordinates = []; // Set an empty array when the coordinates could not be processed
+      }
+    } else {
+      console.log('StopList is either undefined or empty');
+      this.coordinates = []; 
+    }
+          console.log('LIBPIS DATA', state);
+         
+        }
+  
 
   // get stopList
 
@@ -85,5 +113,6 @@ export class AppComponent implements OnInit {
 
   parseStopList(stopList: any): any[] {
     return stopList; // By default, it returns the unprocessed stop list
+
   }
 }

@@ -11,5 +11,4 @@ export const environment = {
     password: 'No81suo81rhlVaTK114y',
     displayId: '1'
   },
-
 };
