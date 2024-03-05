@@ -6,11 +6,11 @@ export interface IFiler {
   mkdir(
     path: string,
     options?: { mode?: number | string; recursive?: boolean },
-    callback?: Function
+    callback?: () => void
   ): void;
   exists(
     path: string,
-    callback?: Function
+    callback?: () => void
     ): void;
   writeFile(
     path: string,
