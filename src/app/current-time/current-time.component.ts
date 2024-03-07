@@ -4,7 +4,7 @@ import { timer } from 'rxjs';
 @Component({
   selector: 'app-current-time',
   template: `
-    <p>{{ currentDate | date : "hh:mm" }}</p>
+    <p>{{ currentDate | date : "HH:mm" }}</p>
   `,
   styleUrls: ['./current-time.component.scss']
 })
