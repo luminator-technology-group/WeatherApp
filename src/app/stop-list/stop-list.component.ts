@@ -5,10 +5,7 @@ import { Component, Input } from '@angular/core';
   template: `
     <div>
       <div *ngFor="let stop of stops">
-        <p>Stop name: {{ stop.name }}</p>
-        <p *ngIf="stop.currentStopName">
-          Current stop name: {{ stop.currentStopName }}
-        </p>
+        <p>{{ stop.name }}, TIME: {{ stop.arrivalTime }} min</p>
       </div>
       <p *ngIf="!stops || stops.length === 0">Not found</p>
     </div>
@@ -17,4 +14,6 @@ import { Component, Input } from '@angular/core';
 })
 export class StoplistComponent {
   @Input() stops: any[] = [];
+ // @Input() arrivalTimes: string[] = [];
+
 }
