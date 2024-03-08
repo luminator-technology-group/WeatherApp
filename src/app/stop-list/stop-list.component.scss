@@ -1,0 +1,27 @@
+.stop-list-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem;
+
+  .stop-list-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background-color: #dfdfdf;
+    padding: 0.5rem;
+    .circle {
+      width: 40px;
+      height: 40px;
+      background: transparent;
+      border-radius: 100%;
+      border: 8px solid rgb(6, 98, 218);
+    }
+
+    p {
+      font-size: 4rem;
+      padding: 2rem;
+    }
+  }
+}

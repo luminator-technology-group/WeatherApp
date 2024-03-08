@@ -8,7 +8,7 @@ import { StopListService } from './stop-list.service';
 @Component({
   selector: 'app-root',
   template: `
-    <div class="weather-container">
+     <!-- <div class="weather-container">
       <app-weather-temperature
         [weatherTemperature]="weatherTemperature"
       ></app-weather-temperature>
@@ -17,7 +17,7 @@ import { StopListService } from './stop-list.service';
       ></app-weather-icon>
       <app-weather-wind [weatherWind]="weatherWind"></app-weather-wind>
       <app-lat-lng [coordinates]="coordinates"></app-lat-lng>
-    </div>
+    </div>  -->
     <app-stop-list [stops]="stops"></app-stop-list>
   `,
   styleUrls: ['./app.component.scss'],
@@ -67,8 +67,8 @@ export class AppComponent implements OnInit {
       .updates()
       .subscribe({
         next: (state: any) => {
-          if (state && state.stopList) {
-            console.log('LIBPIS DATA', state.stopList);
+          if (state) {
+            console.log('LIBPIS DATA', state);
             this.handleCoordinates(state); 
             this.handleStopListData(state);
           } else {
