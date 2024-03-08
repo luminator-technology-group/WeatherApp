@@ -1,5 +1,11 @@
 .weather-container{
     display: flex;
     align-items: center;
-
 }
+.current-time-container {
+    position: fixed; 
+    right: 0.6rem; 
+    padding-top: 1rem;
+  
+  }
+

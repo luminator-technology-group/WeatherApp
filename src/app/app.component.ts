@@ -16,9 +16,14 @@ import { StopListService } from './stop-list.service';
         [weatherIconValue]="weatherIconValue"
       ></app-weather-icon>
       <app-weather-wind [weatherWind]="weatherWind"></app-weather-wind>
-      <app-lat-lng [coordinates]="coordinates"></app-lat-lng>
-    </div>
+      <!-- <app-lat-lng [coordinates]="coordinates"></app-lat-lng>
+ 
     <app-stop-list [stops]="stops"></app-stop-list>
+     </div> -->
+     <div class="current-time-container">
+       <app-current-time></app-current-time>
+     </div>
+   
   `,
   styleUrls: ['./app.component.scss'],
 })
@@ -56,6 +61,7 @@ export class AppComponent implements OnInit {
       if (this.weatherData && this.weatherData.wsymb) {
         this.weatherIconValue = this.weatherData.wsymb;
       }
+      console.log( "Weather",data)
     });
   }
 
