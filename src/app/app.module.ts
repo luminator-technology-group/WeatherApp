@@ -13,6 +13,7 @@ import { CurrentTimeComponent } from './current-time/current-time.component';
 import { FinalDestinationComponent } from './final-destination/final-destination.component';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,6 +24,7 @@ import { FinalDestinationComponent } from './final-destination/final-destination
     StoplistComponent,
     CurrentTimeComponent,
     FinalDestinationComponent,
+
   ],
   imports: [
     BrowserModule,
