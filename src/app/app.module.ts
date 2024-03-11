@@ -10,6 +10,7 @@ import { WeatherIconComponent } from './weather-icon/weather-icon.component';
 import { LatLngComponent } from './lat-lng/lat-lng.component';
 import { StoplistComponent } from './stop-list/stop-list.component';
 import { CurrentTimeComponent } from './current-time/current-time.component';
+import { FinalDestinationComponent } from './final-destination/final-destination.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { CurrentTimeComponent } from './current-time/current-time.component';
     LatLngComponent,
     StoplistComponent,
     CurrentTimeComponent,
+    FinalDestinationComponent,
   ],
   imports: [
     BrowserModule,

@@ -8,20 +8,21 @@ import { StopListService } from './stop-list.service';
 @Component({
   selector: 'app-root',
   template: `
-    <div class="weather-container">
-      <app-weather-temperature
+    
+      <!-- <app-weather-temperature
         [weatherTemperature]="weatherTemperature"
       ></app-weather-temperature>
       <app-weather-icon
         [weatherIconValue]="weatherIconValue"
       ></app-weather-icon>
-      <app-weather-wind [weatherWind]="weatherWind"></app-weather-wind>
+      <app-weather-wind [weatherWind]="weatherWind"></app-weather-wind> -->
       <!-- <app-lat-lng [coordinates]="coordinates"></app-lat-lng>
  
-    <app-stop-list [stops]="stops"></app-stop-list>
-     </div> -->
-     <div class="current-time-container">
-       <app-current-time></app-current-time>
+    <app-stop-list [stops]="stops"></app-stop-list> -->
+    
+     <div class="top-container">
+      <app-final-destination  class="final-destination"[finalDestinationName]= "finalDestinationName"></app-final-destination>
+      <app-current-time class="current-time"></app-current-time>
      </div>
    
   `,
@@ -39,6 +40,7 @@ export class AppComponent implements OnInit {
   longitude = 0;
   mqttConfig = environment.mqtt;
   coordinates: { latitude: number; longitude: number; }[] =[];
+  finalDestinationName: string = '';
 
 
   constructor(
@@ -115,6 +117,9 @@ export class AppComponent implements OnInit {
     // Update stop list
     this.stops = parsedStopList;
     this.stopListService.updateStops(parsedStopList);
+
+    // get final destination name
+    this.finalDestinationName =state.finalDestinationName;
   }
 
   parseStopList(stopList: any): any[] {
