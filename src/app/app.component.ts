@@ -9,7 +9,7 @@ import { StopListService } from './stop-list.service';
   selector: 'app-root',
   template: `
     
-      <!-- <app-weather-temperature
+       <!-- <app-weather-temperature
         [weatherTemperature]="weatherTemperature"
       ></app-weather-temperature>
       <app-weather-icon
