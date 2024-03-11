@@ -6,6 +6,6 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./final-destination.component.scss']
 })
 export class FinalDestinationComponent {
-  @Input () finalDestinationName: string = '';
+  @Input () finalDestinationName = '';
 
 }
