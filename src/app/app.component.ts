@@ -105,15 +105,6 @@ export class AppComponent implements OnInit {
 
   handleStopListData(state: any): void {
     const parsedStopList = this.parseStopList(state.stopList);
-    // Update the arrival time for each stop in the data passed to app-stop-list
-    parsedStopList.forEach((stop, index) => {
-      const nextStopNumber = index + 1;
-      const arrivalTimeKey = `nextStop${nextStopNumber}ExpectedArrivalTimeRelative`;
-      const relativeTime = state[arrivalTimeKey];
-      const estimatedArrivalTimeMinutes = Math.round(relativeTime / 60); // Calculate arrival time in minutes
-
-      stop.arrivalTime = estimatedArrivalTimeMinutes; // Assign arrival time in minutes
-    });
 
     this.stops = parsedStopList;
     this.stopListService.updateStops(parsedStopList);
@@ -123,14 +114,6 @@ export class AppComponent implements OnInit {
   parseStopList(stopList: any): any[] {
     return stopList; // By default, it returns the unprocessed stop list
   }
-  // parseStopList(stopList: any[]): any[] {
-  //   return stopList.map((stop) => ({
-  //     name: stop.name,
-  //     designation: stop.currentStopDesignation,
-  //     arrivalTime: '',
-  //   }));
-  //}
-
   someMethod(): void {
     const stops = this.stopListService.getStops();
     console.log('Stops:', stops);
