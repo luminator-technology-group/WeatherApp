@@ -18,9 +18,6 @@ import { StopListService } from './stop-list.service';
   <app-current-time class="current-time"></app-current-time>
 </div>
 
- 
-
-     
   `,
   styleUrls: ['./app.component.scss'],
 })
@@ -66,6 +63,7 @@ export class AppComponent implements OnInit {
   // connectet libpis with mqtt broker - Please check if this connection is okay I'm not sure about this code.
   initConnection() {
     window.luminator.pis.init(this.mqttConfig);
+
     
     window.luminator.pis.client
       .updates()
@@ -83,6 +81,7 @@ export class AppComponent implements OnInit {
           console.error('Error occurred while fetching data:', error);
         },
       });
+
   }
 
  // read Latitude and Longitude
@@ -108,15 +107,26 @@ export class AppComponent implements OnInit {
 
   handleStopListData(state: any): void {
     const parsedStopList = this.parseStopList(state.stopList);
-    console.log('Parsed stop list:', parsedStopList);
 
-    // Update stop list
     this.stops = parsedStopList;
     this.stopListService.updateStops(parsedStopList);
+
+
+    this.someMethod();
+
+    // get final destination name
+    this.finalDestinationName = state.finalDestinationName;
+
   }
 
   parseStopList(stopList: any): any[] {
     return stopList; // By default, it returns the unprocessed stop list
+
+  }
+  someMethod(): void {
+    const stops = this.stopListService.getStops();
+    console.log('Stops:', stops);
+
 
   }
 }
