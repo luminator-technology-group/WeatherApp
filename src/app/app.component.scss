@@ -1,11 +1,13 @@
-.weather-container{
-    display: flex;
-    align-items: center;
+.weather-container {
+  display: flex;
+  align-items: center;
 }
-.current-time-container {
-    position: fixed; 
-    right: 0.6rem; 
-    padding-top: 1rem;
-  
-  }
+
+.top-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    
+
+}
 
