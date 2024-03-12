@@ -1,21 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from './api.service';
 import { environment } from 'src/environments/environment';
+import { LuminatorWindow } from './app.model';
 import { CoordinatesService } from './coordinates.service';
 import { StopListService } from './stop-list.service';
 
 @Component({
   selector: 'app-root',
   template: `
- <app-weather-temperature [weatherTemperature]="weatherTemperature"></app-weather-temperature>
-      <app-weather-icon [weatherIconValue]="weatherIconValue"></app-weather-icon>
-      <app-weather-wind [weatherWind]="weatherWind"></app-weather-wind>
-    <!-- <app-lat-lng [coordinates]="coordinates"></app-lat-lng>
-    <app-stop-list [stops]="stops"></app-stop-list> -->
+     <!-- <app-weather-temperature [weatherTemperature]="weatherTemperature"></app-weather-temperature>
+    <app-weather-icon [weatherIconValue]="weatherIconValue"></app-weather-icon>
+<app-weather-wind [weatherWind]="weatherWind"></app-weather-wind>
+<app-lat-lng [coordinates]="coordinates"></app-lat-lng> -->
+<app-stop-list [stops]="stops"></app-stop-list>
 <div class="top-container">
-      <app-final-destination class="final-destination" [finalDestinationName]="finalDestinationName"></app-final-destination>
-      <app-current-time class="current-time"></app-current-time>
+  <app-final-destination class="final-destination" [finalDestinationName]="finalDestinationName"></app-final-destination>
+  <app-current-time class="current-time"></app-current-time>
 </div>
+
   `,
   styleUrls: ['./app.component.scss'],
 })
@@ -30,7 +32,7 @@ export class AppComponent implements OnInit {
   latitude = 0;
   longitude = 0;
   mqttConfig = environment.mqtt;
-  coordinates: { latitude: number; longitude: number }[] = [];
+  coordinates: { latitude: number; longitude: number; }[] =[];
   finalDestinationName = '';
 
 
@@ -38,6 +40,7 @@ export class AppComponent implements OnInit {
     private apiService: ApiService,
     private coordinatesService: CoordinatesService,
     private stopListService: StopListService,
+
   ) {}
 
   ngOnInit(): void {
@@ -53,7 +56,7 @@ export class AppComponent implements OnInit {
       if (this.weatherData && this.weatherData.wsymb) {
         this.weatherIconValue = this.weatherData.wsymb;
       }
-      console.log('Weather', data);
+      console.log( "Weather",data)
     });
   }
 
@@ -61,30 +64,30 @@ export class AppComponent implements OnInit {
   initConnection() {
     window.luminator.pis.init(this.mqttConfig);
 
-    window.luminator.pis.client.updates().subscribe({
-      next: (state: any) => {
-        if (state && state.stopList) {
+    
+    window.luminator.pis.client
+      .updates()
+      .subscribe({
+        next: (state: any) => {
+          if (state && state.stopList) {
+            console.log('LIBPIS DATA', state.stopList);
+            this.handleCoordinates(state); 
+            this.handleStopListData(state);
+          } else {
+            console.log('Waiting for data...');
+          }
+        },
+        error: (error: any) => {
+          console.error('Error occurred while fetching data:', error);
+        },
+      });
 
-          console.log('LIBPIS DATA', state.stopList);
-
-          this.handleCoordinates(state);
-          this.handleStopListData(state);
-        } else {
-          console.log('Waiting for data...');
-        }
-      },
-      error: (error: any) => {
-        console.error('Error occurred while fetching data:', error);
-      },
-    });
   }
 
-  // read Latitude and Longitude
+ // read Latitude and Longitude
   handleCoordinates(state: any): void {
     if (state.stopList && state.stopList.length > 0) {
-      const coordinate = this.coordinatesService.processCoordinates(
-        state.stopList,
-      );
+      const coordinate = this.coordinatesService.processCoordinates(state.stopList);
       if (coordinate) {
         this.coordinates = coordinate;
       } else {
@@ -93,10 +96,12 @@ export class AppComponent implements OnInit {
       }
     } else {
       console.log('StopList is either undefined or empty');
-      this.coordinates = [];
+      this.coordinates = []; 
     }
-    console.log('LIBPIS DATA', state);
-  }
+          console.log('LIBPIS DATA', state);
+         
+        }
+  
 
   // get stopList
 
@@ -106,10 +111,12 @@ export class AppComponent implements OnInit {
     this.stops = parsedStopList;
     this.stopListService.updateStops(parsedStopList);
 
+
     this.someMethod();
 
     // get final destination name
     this.finalDestinationName = state.finalDestinationName;
+
   }
 
   parseStopList(stopList: any): any[] {
