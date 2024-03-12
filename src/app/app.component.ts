@@ -7,24 +7,15 @@ import { StopListService } from './stop-list.service';
 @Component({
   selector: 'app-root',
   template: `
-    <!-- <app-weather-temperature
-        [weatherTemperature]="weatherTemperature"
-      ></app-weather-temperature>
-      <app-weather-icon
-        [weatherIconValue]="weatherIconValue"
-      ></app-weather-icon>
-      <app-weather-wind [weatherWind]="weatherWind"></app-weather-wind> -->
+ <app-weather-temperature [weatherTemperature]="weatherTemperature"></app-weather-temperature>
+      <app-weather-icon [weatherIconValue]="weatherIconValue"></app-weather-icon>
+      <app-weather-wind [weatherWind]="weatherWind"></app-weather-wind>
     <!-- <app-lat-lng [coordinates]="coordinates"></app-lat-lng>
- 
     <app-stop-list [stops]="stops"></app-stop-list> -->
-
-    <div class="top-container">
-      <app-final-destination
-        class="final-destination"
-        [finalDestinationName]="finalDestinationName"
-      ></app-final-destination>
+<div class="top-container">
+      <app-final-destination class="final-destination" [finalDestinationName]="finalDestinationName"></app-final-destination>
       <app-current-time class="current-time"></app-current-time>
-    </div>
+</div>
   `,
   styleUrls: ['./app.component.scss'],
 })
@@ -41,6 +32,7 @@ export class AppComponent implements OnInit {
   mqttConfig = environment.mqtt;
   coordinates: { latitude: number; longitude: number }[] = [];
   finalDestinationName = '';
+
 
   constructor(
     private apiService: ApiService,
@@ -72,7 +64,9 @@ export class AppComponent implements OnInit {
     window.luminator.pis.client.updates().subscribe({
       next: (state: any) => {
         if (state && state.stopList) {
+
           console.log('LIBPIS DATA', state.stopList);
+
           this.handleCoordinates(state);
           this.handleStopListData(state);
         } else {
@@ -108,11 +102,11 @@ export class AppComponent implements OnInit {
 
   handleStopListData(state: any): void {
     const parsedStopList = this.parseStopList(state.stopList);
-    console.log('Parsed stop list:', parsedStopList);
 
-    // Update stop list
     this.stops = parsedStopList;
     this.stopListService.updateStops(parsedStopList);
+
+    this.someMethod();
 
     // get final destination name
     this.finalDestinationName = state.finalDestinationName;
@@ -120,5 +114,12 @@ export class AppComponent implements OnInit {
 
   parseStopList(stopList: any): any[] {
     return stopList; // By default, it returns the unprocessed stop list
+
+  }
+  someMethod(): void {
+    const stops = this.stopListService.getStops();
+    console.log('Stops:', stops);
+
+
   }
 }
