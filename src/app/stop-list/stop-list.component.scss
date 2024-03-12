@@ -8,6 +8,7 @@
   .stop-list-item {
     display: flex;
     align-items: center;
+    justify-content: space-around;
     width: 100%;
     background-color: #dfdfdf;
     padding: 0.5rem;
@@ -18,10 +19,20 @@
       border-radius: 100%;
       border: 8px solid rgb(6, 98, 218);
     }
+    .stop-name{
+      display: flex;
+      align-items: center;
+    }
 
     p {
-      font-size: 4rem;
+      font-size: 2rem;
       padding: 2rem;
+    }
+
+    .weather-info{
+      display: flex;
+      align-items: center;
+      
     }
   }
 }

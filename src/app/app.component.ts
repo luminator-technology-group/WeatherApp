@@ -8,15 +8,18 @@ import { StopListService } from './stop-list.service';
 @Component({
   selector: 'app-root',
   template: `
-     <!-- <app-weather-temperature [weatherTemperature]="weatherTemperature"></app-weather-temperature>
-    <app-weather-icon [weatherIconValue]="weatherIconValue"></app-weather-icon>
-<app-weather-wind [weatherWind]="weatherWind"></app-weather-wind>
-<app-lat-lng [coordinates]="coordinates"></app-lat-lng> -->
-<app-stop-list [stops]="stops"></app-stop-list>
-<div class="top-container">
+  
+  <div class="top-container">
   <app-final-destination class="final-destination" [finalDestinationName]="finalDestinationName"></app-final-destination>
   <app-current-time class="current-time"></app-current-time>
 </div>
+<app-stop-list [stops]="stops"></app-stop-list>
+<!-- <app-weather-temperature [weatherTemperature]="weatherTemperature"></app-weather-temperature>
+<app-weather-icon [weatherIconValue]="weatherIconValue"></app-weather-icon>
+<app-weather-wind [weatherWind]="weatherWind"></app-weather-wind>
+<app-lat-lng [coordinates]="coordinates"></app-lat-lng> -->
+
+
 
   `,
   styleUrls: ['./app.component.scss'],
