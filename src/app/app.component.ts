@@ -20,7 +20,7 @@ import { StopListService } from './stop-list.service';
     </div>  -->
 
     <app-stop-list [stops]="stops"></app-stop-list>
-     </div> -->
+  
      <div class="current-time-container">
        <app-current-time></app-current-time>
      </div>
