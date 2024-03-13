@@ -20,7 +20,6 @@ import { Component, Input } from '@angular/core';
             [weatherIconValue]="weatherIconValue"
           ></app-weather-icon>
           <app-weather-wind [weatherWind]="weatherWind"></app-weather-wind>
-          <app-lat-lng [coordinates]="coordinates"></app-lat-lng>
         </div>
 
         <div>
@@ -37,7 +36,7 @@ export class StoplistComponent {
   @Input() weatherData: any;
   @Input() weatherWind: number = 0;
   @Input() weatherTemperature: number = 0;
-  @Input() coordinates: { latitude: number; longitude: number }[] = [];
+  
 
   calculateArrivalTime(expectedArrivalTime: string): string {
     if (!expectedArrivalTime) {
@@ -58,4 +57,5 @@ export class StoplistComponent {
       ? 'Already arrived'
       : `${differenceInMinutes} min`;
   }
+  
 }

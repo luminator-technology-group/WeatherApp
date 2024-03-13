@@ -15,13 +15,13 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  getWeather(): Observable<any> {
-    const url = `${this.apiUrl}`;
-    return this.http.get(url);
-  }
+  // getWeather(): Observable<any> {
+  //   const url = `${this.apiUrl}`;
+  //   return this.http.get(url);
+  // }
 
   getWeatherCoordinates(latitude: number, longitude: number): Observable<any> {
-    const url = `${this.apiUrl}/position?lon=${longitude}&lat=${latitude}`;
+    const url = `${this.apiUrl}?lon=${longitude}&lat=${latitude}`;
     return this.http.get(url);
   }
   
