@@ -4,22 +4,39 @@ import { Component, Input } from '@angular/core';
   selector: 'app-stop-list',
   template: `
     <div class="stop-list-container">
-      <div class="stop-list-item"*ngFor="let stop of stops | slice:0:4 " >
-      <div class="circle" ></div> <p>{{ stop.name }}</p>
-    <div>
-      <div *ngFor="let stop of stops">
-        <p>
-          {{ stop.name }}. Arrival Time :
-          {{ calculateArrivalTime(stop.expectedArrivalTime) }}
-        </p>
+      <div class="stop-list-item" *ngFor="let stop of stops">
+        <div class="stop-name">
+          <div class="circle"></div>
+          <p>{{ stop.name }}</p>
+        </div>
+        <div class="arrival-time">
+          <p>{{ calculateArrivalTime(stop.expectedArrivalTime) }}</p>
+        </div>
+        <div class="weather-info">
+          <app-weather-temperature
+            [weatherTemperature]="weatherTemperature"
+          ></app-weather-temperature>
+          <app-weather-icon
+            [weatherIconValue]="weatherIconValue"
+          ></app-weather-icon>
+          <app-weather-wind [weatherWind]="weatherWind"></app-weather-wind>
+        </div>
+
+        <div>
+          <p *ngIf="!stops || stops.length === 0">Not found</p>
+        </div>
       </div>
-      <p *ngIf="!stops || stops.length === 0">Not found</p>
     </div>
   `,
   styleUrls: ['./stop-list.component.scss'],
 })
 export class StoplistComponent {
   @Input() stops: any[] = [];
+  @Input() weatherIconValue = 0;
+  @Input() weatherData: any;
+  @Input() weatherWind = 0;
+  @Input() weatherTemperature= 0;
+  
 
   calculateArrivalTime(expectedArrivalTime: string): string {
     if (!expectedArrivalTime) {
@@ -40,4 +57,5 @@ export class StoplistComponent {
       ? 'Already arrived'
       : `${differenceInMinutes} min`;
   }
+  
 }

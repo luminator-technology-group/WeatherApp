@@ -15,8 +15,16 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  getWeather(): Observable<any> {
-    const url = `${this.apiUrl}`;
+  // getWeather(): Observable<any> {
+  //   const url = `${this.apiUrl}`;
+  //   return this.http.get(url);
+  // }
+
+  getWeatherCoordinates(latitude: number, longitude: number): Observable<any> {
+    const url = `${this.apiUrl}?lon=${longitude}&lat=${latitude}`;
     return this.http.get(url);
   }
+  
 }
+
+// http://localhost:8080/dynamic-weather/api/weather/position?lon=14.1234&lat=58.1234

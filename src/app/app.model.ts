@@ -42,3 +42,7 @@ export interface Stop {
   lineNumber: number;
   // Define other properties as needed
 }
+export interface Coordinates {
+  latitude: number;
+  longitude: number;
+}
