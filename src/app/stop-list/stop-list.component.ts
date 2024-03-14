@@ -32,10 +32,10 @@ import { Component, Input } from '@angular/core';
 })
 export class StoplistComponent {
   @Input() stops: any[] = [];
-  @Input() weatherIconValue: number = 0;
+  @Input() weatherIconValue = 0;
   @Input() weatherData: any;
-  @Input() weatherWind: number = 0;
-  @Input() weatherTemperature: number = 0;
+  @Input() weatherWind = 0;
+  @Input() weatherTemperature= 0;
   
 
   calculateArrivalTime(expectedArrivalTime: string): string {
