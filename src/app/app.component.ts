@@ -92,16 +92,6 @@ export class AppComponent implements OnInit {
 
           this.handleCoordinates(state);
           this.handleStopListData(state);
-
-          // create a detail console log of stop list + weather icon name, arrival time
-          console.log(
-            'name: ' +
-              ' Alingsås ' +
-              ' Arrival time ' +
-              ' 11:45 ' +
-              ' weather ' +
-              ' cloud symbol ',
-          );
         } else {
           console.log('Waiting for data...');
         }
