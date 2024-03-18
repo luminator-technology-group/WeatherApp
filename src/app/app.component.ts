@@ -3,6 +3,7 @@ import { ApiService } from './api.service';
 import { environment } from 'src/environments/environment';
 import { CoordinatesService } from './coordinates.service';
 import { StopListService } from './stop-list.service';
+import { WeatherCoordinates } from './app.model';
 
 @Component({
   selector: 'app-root',
@@ -37,9 +38,9 @@ export class AppComponent implements OnInit {
   mqttConfig = environment.mqtt;
   coordinates: { latitude: number; longitude: number }[] = [];
   finalDestinationName = '';
-  weatherCoordinates: any;
-  private handleCoordinatesCounter = 0; // Counter to track the number of times handleCoordinates is called
+  weatherCoordinates!: WeatherCoordinates;
   private handleStopListCounter = 0;
+  private previousStopList: any[] = [];
 
   constructor(
     private apiService: ApiService,
@@ -49,21 +50,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.initConnection();
-    // this.getWeather();
+
     this.getWeatherCoordinates(this.latitude, this.longitude);
   }
 
-  // getWeather(): void {
-  //   this.apiService.getWeather().subscribe((data) => {
-  //     this.weatherData = data;
-  //     this.weatherTemperature = this.weatherData.temp;
-  //     this.weatherWind = this.weatherData.winSpd;
-  //     if (this.weatherData && this.weatherData.wsymb) {
-  //       this.weatherIconValue = this.weatherData.wsymb;
-  //     }
-  //     console.log('Weather', data);
-  //   });
-  // }
 
   // get weather coordinats
   getWeatherCoordinates(latitude: number, longitude: number): void {
@@ -79,7 +69,6 @@ export class AppComponent implements OnInit {
         console.log('Weather', data);
       });
   }
-
   // connectet libpis with mqtt broker - Please check if this connection is okay I'm not sure about this code.
   initConnection() {
     window.luminator.pis.init(this.mqttConfig);
@@ -103,24 +92,18 @@ export class AppComponent implements OnInit {
   }
 
   // read Latitude and Longitude
+
   handleCoordinates(state: any): void {
     if (state.stopList && state.stopList.length > 0) {
-      // for now we use length. but later, we should check stop name or something to return if data is same and avoid sending new weather request.
-      if (state.stopList.length === this.stops.length) {
-        this.handleCoordinatesCounter++;
-        //console.log("this.handleCoordinatesCounter ", this.handleCoordinatesCounter);
-
-        if (
-          this.handleCoordinatesCounter >= 2 &&
-          this.handleCoordinatesCounter <= 10
-        ) {
-          if (this.handleCoordinatesCounter == 10) {
-            this.handleCoordinatesCounter = 0;
-          }
-          return;
-        }
+      const areStopsSame = this.areStopsSame(state.stopList);
+      if (areStopsSame) {
+        console.log('data is same ');
+        return;
       }
+      // If the data is different, update the previous stop list
+      this.previousStopList = state.stopList;
 
+      // Process the coordinates
       const coordinate = this.coordinatesService.processCoordinates(
         state.stopList,
       );
@@ -138,6 +121,18 @@ export class AppComponent implements OnInit {
       console.log('StopList is either undefined or empty');
       this.coordinates = [];
     }
+  }
+  // Check if the stop names are the same
+  areStopsSame(stopList: any[]): boolean {
+    if (stopList.length !== this.previousStopList.length) {
+      return false;
+    }
+    for (let i = 0; i < stopList.length; i++) {
+      if (stopList[i].name !== this.previousStopList[i].name) {
+        return false;
+      }
+    }
+    return true;
   }
 
   // get stopList
