@@ -46,3 +46,8 @@ export interface Coordinates {
   latitude: number;
   longitude: number;
 }
+export interface WeatherCoordinates {
+  temp: number;
+  winSpd: number;
+  wsymb?: number; 
+}

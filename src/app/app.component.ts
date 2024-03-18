@@ -3,6 +3,7 @@ import { ApiService } from './api.service';
 import { environment } from 'src/environments/environment';
 import { CoordinatesService } from './coordinates.service';
 import { StopListService } from './stop-list.service';
+import { WeatherCoordinates } from './app.model';
 
 @Component({
   selector: 'app-root',
@@ -36,7 +37,8 @@ export class AppComponent implements OnInit {
   mqttConfig = environment.mqtt;
   coordinates: { latitude: number; longitude: number }[] = [];
   finalDestinationName = '';
-  weatherCoordinates: any;
+  weatherCoordinates!: WeatherCoordinates;
+
   private handleStopListCounter = 0;
   private previousStopList: any[] = [];
 
@@ -48,21 +50,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.initConnection();
-    // this.getWeather();
+
     this.getWeatherCoordinates(this.latitude, this.longitude);
   }
 
-  // getWeather(): void {
-  //   this.apiService.getWeather().subscribe((data) => {
-  //     this.weatherData = data;
-  //     this.weatherTemperature = this.weatherData.temp;
-  //     this.weatherWind = this.weatherData.winSpd;
-  //     if (this.weatherData && this.weatherData.wsymb) {
-  //       this.weatherIconValue = this.weatherData.wsymb;
-  //     }
-  //     console.log('Weather', data);
-  //   });
-  // }
 
   // get weather coordinats
   getWeatherCoordinates(latitude: number, longitude: number): void {
@@ -88,7 +79,6 @@ export class AppComponent implements OnInit {
         console.log('Weather', weatherInfo);
       });
   }
-
   // connectet libpis with mqtt broker - Please check if this connection is okay I'm not sure about this code.
   initConnection() {
     window.luminator.pis.init(this.mqttConfig);
