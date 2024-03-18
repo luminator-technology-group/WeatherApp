@@ -23,7 +23,6 @@ import { WeatherCoordinates } from './app.model';
       [weatherTemperature]="weatherTemperature"
     ></app-stop-list>
   `,
-  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   title = 'WeatherApp';
@@ -39,6 +38,7 @@ export class AppComponent implements OnInit {
   coordinates: { latitude: number; longitude: number }[] = [];
   finalDestinationName = '';
   weatherCoordinates!: WeatherCoordinates;
+
   private handleStopListCounter = 0;
   private previousStopList: any[] = [];
 
@@ -57,16 +57,26 @@ export class AppComponent implements OnInit {
 
   // get weather coordinats
   getWeatherCoordinates(latitude: number, longitude: number): void {
+    console.log('Latitude:', latitude, 'Longitude:', longitude);
+
+    const weatherInfo = {
+      latitude: latitude,
+      longitude: longitude,
+      weatherData: null,
+    };
+    console.log('Weather Info', weatherInfo);
+
     this.apiService
       .getWeatherCoordinates(latitude, longitude)
       .subscribe((data) => {
+        weatherInfo.weatherData = data;
         this.weatherCoordinates = data;
         this.weatherTemperature = this.weatherCoordinates.temp;
         this.weatherWind = this.weatherCoordinates.winSpd;
         if (this.weatherCoordinates && this.weatherCoordinates.wsymb) {
           this.weatherIconValue = this.weatherCoordinates.wsymb;
         }
-        console.log('Weather', data);
+        console.log('Weather', weatherInfo);
       });
   }
   // connectet libpis with mqtt broker - Please check if this connection is okay I'm not sure about this code.
