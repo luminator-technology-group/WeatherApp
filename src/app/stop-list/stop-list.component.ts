@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { StopButtonService } from '../stop-button.service';
 
 @Component({
   selector: 'app-stop-list',
@@ -9,7 +10,7 @@ import { Component, Input } from '@angular/core';
       </div>
       <div class="stop-list-item" *ngFor="let stop of displayedStops">
         <div class="stop-name">
-          <div class="circle"></div>
+          <button class="circle" (click)="handleButtonStop()"></button>
           <p>{{ stop.name }}</p>
         </div>
         <div class="arrival-time">
@@ -33,6 +34,16 @@ export class StoplistComponent {
   @Input() weatherTemperature = 0;
 
   displayedStops: any[] = [];
+
+
+  constructor(private stopButtonService: StopButtonService) {}
+  //stop buton 
+  handleButtonStop() {
+    this.stopButtonService.notifyButtonClick();
+  }
+
+
+
 
   ngOnChanges() {
     this.updateDisplayedStops();

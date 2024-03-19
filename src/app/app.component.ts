@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { CoordinatesService } from './coordinates.service';
 import { StopListService } from './stop-list.service';
 import { WeatherCoordinates } from './app.model';
+import { StopButtonService } from './stop-button.service';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,7 @@ import { WeatherCoordinates } from './app.model';
         [finalDestinationName]="finalDestinationName"
       ></app-final-destination>
       <app-current-time class="current-time"></app-current-time>
+      <app-stop-button *ngIf="isStopButtonVisible"></app-stop-button>
     </div>
     <app-stop-list
       [stops]="stops"
@@ -23,6 +25,7 @@ import { WeatherCoordinates } from './app.model';
       [weatherTemperature]="weatherTemperature"
     ></app-stop-list>
   `,
+   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   title = 'WeatherApp';
@@ -41,44 +44,38 @@ export class AppComponent implements OnInit {
 
   private handleStopListCounter = 0;
   private previousStopList: any[] = [];
+  isStopButtonVisible = false;
 
   constructor(
     private apiService: ApiService,
     private coordinatesService: CoordinatesService,
     private stopListService: StopListService,
+    private stopButtonService: StopButtonService
   ) {}
 
   ngOnInit(): void {
     this.initConnection();
-
     this.getWeatherCoordinates(this.latitude, this.longitude);
+    this.stopButtonService.buttonClick.subscribe(() => {
+      this.isStopButtonVisible = true;
+    });
   }
 
 
-  // get weather coordinats
-  getWeatherCoordinates(latitude: number, longitude: number): void {
-    console.log('Latitude:', latitude, 'Longitude:', longitude);
-
-    const weatherInfo = {
-      latitude: latitude,
-      longitude: longitude,
-      weatherData: null,
-    };
-    console.log('Weather Info', weatherInfo);
-
-    this.apiService
-      .getWeatherCoordinates(latitude, longitude)
-      .subscribe((data) => {
-        weatherInfo.weatherData = data;
-        this.weatherCoordinates = data;
-        this.weatherTemperature = this.weatherCoordinates.temp;
-        this.weatherWind = this.weatherCoordinates.winSpd;
-        if (this.weatherCoordinates && this.weatherCoordinates.wsymb) {
-          this.weatherIconValue = this.weatherCoordinates.wsymb;
-        }
-        console.log('Weather', weatherInfo);
-      });
-  }
+ // get weather coordinats
+ getWeatherCoordinates(latitude: number, longitude: number): void {
+  this.apiService
+    .getWeatherCoordinates(latitude, longitude)
+    .subscribe((data) => {
+      this.weatherCoordinates = data;
+      this.weatherTemperature = this.weatherCoordinates.temp;
+      this.weatherWind = this.weatherCoordinates.winSpd;
+      if (this.weatherCoordinates && this.weatherCoordinates.wsymb) {
+        this.weatherIconValue = this.weatherCoordinates.wsymb;
+      }
+      console.log('Weather', data);
+    });
+}
   // connectet libpis with mqtt broker - Please check if this connection is okay I'm not sure about this code.
   initConnection() {
     window.luminator.pis.init(this.mqttConfig);
@@ -91,6 +88,7 @@ export class AppComponent implements OnInit {
 
           this.handleCoordinates(state);
           this.handleStopListData(state);
+          this.stopButtonService.setMqttClient(window.luminator.pis.client);
         } else {
           console.log('Waiting for data...');
         }
@@ -100,6 +98,8 @@ export class AppComponent implements OnInit {
       },
     });
   }
+
+ 
 
   // read Latitude and Longitude
 
@@ -150,8 +150,6 @@ export class AppComponent implements OnInit {
   handleStopListData(state: any): void {
     if (state.stopList.length === this.stops.length) {
       this.handleStopListCounter++;
-      console.log('this.handleStopListCounter ', this.handleStopListCounter);
-
       if (this.handleStopListCounter >= 2 && this.handleStopListCounter <= 5) {
         if (this.handleStopListCounter == 5) {
           this.handleStopListCounter = 0;
