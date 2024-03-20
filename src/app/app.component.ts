@@ -23,6 +23,7 @@ import { WeatherCoordinates } from './app.model';
       [weatherTemperature]="weatherTemperature"
     ></app-stop-list>
   `,
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   title = 'WeatherApp';
