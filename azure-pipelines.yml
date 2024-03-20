@@ -39,29 +39,6 @@ jobs:
       - script: npm run build
         displayName: "Build"
 
-      - task: UsePythonVersion@0
-        displayName: "Set python version"
-        inputs:
-          versionSpec: "3.8"
-
-      - download: VersioningTool
-        displayName: Download versioning tool
-        artifact: versioning-tool
-
-      - task: CmdLine@2
-        displayName: Run versioning tool
-        inputs:
-          script: |
-            set -ex
-            chmod +x $(Pipeline.Workspace)/VersioningTool/versioning-tool/versioning-tool
-            $(Pipeline.Workspace)/VersioningTool/versioning-tool/versioning-tool
-        env:
-          AZ_PAT: $(System.AccessToken)
-
-      - download: current
-        displayName: Download version report
-        artifact: Versions
-
       - task: CmdLine@2
         displayName: Copy bundle files
         inputs:
@@ -71,8 +48,6 @@ jobs:
             cp -r $(Build.SourcesDirectory)/dist/weather-app/* $(Build.ArtifactStagingDirectory)/WebApps/webapps.weatherApp
             cp $(Build.SourcesDirectory)/bundle-description.json $(Build.ArtifactStagingDirectory)/WebApps
             cp -r $(Build.SourcesDirectory)/thumbnail.svg $(Build.ArtifactStagingDirectory)/WebApps
-            cp $(Pipeline.Workspace)/Versions/versions.json $(Build.ArtifactStagingDirectory)/WebApps
-
       - task: ArchiveFiles@2
         displayName: Package files
         inputs:
