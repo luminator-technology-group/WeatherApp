@@ -10,4 +10,31 @@
 <body>
   <app-root></app-root>
 </body>
+<script>
+ function informParentInitialized(url) {
+        if(currentState !== 'initialized') {
+          currentState = 'initialized';
+          window.parent.postMessage({
+            app: 'WeatherApp',
+            instanceId: instanceId,
+            message: 'initialized'
+          }, '*');
+
+          console.log(`WeatherApp: instanceId ${instanceId}, source ${url}, Initialized`);
+        }
+    }
+
+    function informParentUninitialized(url = '') {
+      if(currentState !== 'uninitialized') {
+        currentState = 'uninitialized';
+        window.parent.postMessage({
+          app: 'WeatherApp',
+          instanceId: instanceId,
+          message: 'uninitialized'
+        }, '*');
+
+        console.log(`WeatherApp: instanceId ${instanceId}, source ${url}, Uninitialized`);
+      }
+    }
+</script>
 </html>
