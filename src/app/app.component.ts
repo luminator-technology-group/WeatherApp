@@ -14,8 +14,9 @@ import { StopButtonService } from './stop-button.service';
         class="final-destination"
         [finalDestinationName]="finalDestinationName"
       ></app-final-destination>
+       <app-stop-button *ngIf="stopPressed"></app-stop-button>
       <app-current-time class="current-time"></app-current-time>
-      <app-stop-button *ngIf="isStopButtonVisible"></app-stop-button>
+     
     </div>
     <app-stop-list
       [stops]="stops"
@@ -44,7 +45,7 @@ export class AppComponent implements OnInit {
 
   private handleStopListCounter = 0;
   private previousStopList: any[] = [];
-  isStopButtonVisible = false;
+  stopPressed = false;
 
   constructor(
     private apiService: ApiService,
@@ -57,7 +58,7 @@ export class AppComponent implements OnInit {
     this.initConnection();
     this.getWeatherCoordinates(this.latitude, this.longitude);
     this.stopButtonService.buttonClick.subscribe(() => {
-      this.isStopButtonVisible = true;
+      this.stopPressed = true;
     });
   }
 
@@ -88,7 +89,8 @@ export class AppComponent implements OnInit {
 
           this.handleCoordinates(state);
           this.handleStopListData(state);
-          this.stopButtonService.setMqttClient(window.luminator.pis.client);
+          this.hendleStopButton(state);
+      
         } else {
           console.log('Waiting for data...');
         }
@@ -97,9 +99,18 @@ export class AppComponent implements OnInit {
         console.error('Error occurred while fetching data:', error);
       },
     });
+    this.hendleStopButton(this.state);
   }
 
- 
+ // read the stop button
+ hendleStopButton(state:any):void{
+  window.luminator.pis.init(this.mqttConfig);
+  window.luminator.pis.client.updates().subscribe('pis/0/sensors/stop_button', (message: any) => {
+    const stopButtonData = JSON.parse(message.payload.toString());
+    console.log('Received stop button data:', stopButtonData);
+   
+  });
+ }
 
   // read Latitude and Longitude
 
@@ -131,6 +142,7 @@ export class AppComponent implements OnInit {
       console.log('StopList is either undefined or empty');
       this.coordinates = [];
     }
+    
   }
   // Check if the stop names are the same
   areStopsSame(stopList: any[]): boolean {
