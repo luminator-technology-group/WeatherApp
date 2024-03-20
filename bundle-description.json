@@ -7,7 +7,7 @@
       "paths": ["WebApps/webapps.weatherApp"],
       "thumbnail": "WebApps/thumbnail.svg",
       "projectType": "MOBILE",
-      "url": "/WebApps/webapps.weatherApp/index.html",
+      "url": "/WebApps/webapps.weatherApp/index.html"
       
     }
   ]
