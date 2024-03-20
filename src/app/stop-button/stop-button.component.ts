@@ -1,11 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-stop-button',
-  template: `<div class="stop">Stop</div>`,
-  styleUrls: ['./stop-button.component.scss']
+  template: `<div *ngIf="stopPressed" class="stop">Stop</div>`,
+  styleUrls: ['./stop-button.component.scss'],
 })
 export class StopButtonComponent {
-
+  @Input() stopPressed: boolean = false;
 }
-

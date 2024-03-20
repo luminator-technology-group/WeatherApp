@@ -14,9 +14,8 @@ import { StopButtonService } from './stop-button.service';
         class="final-destination"
         [finalDestinationName]="finalDestinationName"
       ></app-final-destination>
-       <app-stop-button *ngIf="stopPressed"></app-stop-button>
+      <app-stop-button [stopPressed]="stopPressed"></app-stop-button>
       <app-current-time class="current-time"></app-current-time>
-     
     </div>
     <app-stop-list
       [stops]="stops"
@@ -26,7 +25,7 @@ import { StopButtonService } from './stop-button.service';
       [weatherTemperature]="weatherTemperature"
     ></app-stop-list>
   `,
-   styleUrls: ['./app.component.scss'],
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   title = 'WeatherApp';
@@ -51,46 +50,48 @@ export class AppComponent implements OnInit {
     private apiService: ApiService,
     private coordinatesService: CoordinatesService,
     private stopListService: StopListService,
-    private stopButtonService: StopButtonService
+    private stopButtonService: StopButtonService,
   ) {}
+
+  //stop buton
+  handleButtonStop() {
+    this.stopButtonService.notifyButtonClick();
+  }
+
+  handleButtonStopClear() {
+    this.stopButtonService.notifyClearButtonClick();
+  }
 
   ngOnInit(): void {
     this.initConnection();
     this.getWeatherCoordinates(this.latitude, this.longitude);
-    this.stopButtonService.buttonClick.subscribe(() => {
-      this.stopPressed = true;
-    });
   }
 
-
- // get weather coordinats
- getWeatherCoordinates(latitude: number, longitude: number): void {
-  this.apiService
-    .getWeatherCoordinates(latitude, longitude)
-    .subscribe((data) => {
-      this.weatherCoordinates = data;
-      this.weatherTemperature = this.weatherCoordinates.temp;
-      this.weatherWind = this.weatherCoordinates.winSpd;
-      if (this.weatherCoordinates && this.weatherCoordinates.wsymb) {
-        this.weatherIconValue = this.weatherCoordinates.wsymb;
-      }
-      console.log('Weather', data);
-    });
-}
-  // connectet libpis with mqtt broker - Please check if this connection is okay I'm not sure about this code.
+  // get weather coordinats
+  getWeatherCoordinates(latitude: number, longitude: number): void {
+    this.apiService
+      .getWeatherCoordinates(latitude, longitude)
+      .subscribe((data) => {
+        this.weatherCoordinates = data;
+        this.weatherTemperature = this.weatherCoordinates.temp;
+        this.weatherWind = this.weatherCoordinates.winSpd;
+        if (this.weatherCoordinates && this.weatherCoordinates.wsymb) {
+          this.weatherIconValue = this.weatherCoordinates.wsymb;
+        }
+        console.log('Weather', data);
+      });
+  }
+  // connectet libpis with mqtt broker 
   initConnection() {
     window.luminator.pis.init(this.mqttConfig);
 
     window.luminator.pis.client.updates().subscribe({
       next: (state: any) => {
         if (state && state.stopList) {
-          //console.log('List data from init:', state.stopList);
           console.log('state is ', state);
-
           this.handleCoordinates(state);
           this.handleStopListData(state);
-         
-      
+          this.handleButtonStopTopic(state);
         } else {
           console.log('Waiting for data...');
         }
@@ -99,18 +100,22 @@ export class AppComponent implements OnInit {
         console.error('Error occurred while fetching data:', error);
       },
     });
-
   }
 
- // read the stop button
- hendleStopButton(state:any):void{
-  window.luminator.pis.client.updates().subscribe('pis/0/sensors/stop_button', (message: any) => {
-    const stopButtonData = JSON.parse(message.payload.toString());
-    console.log('Received stop button data:', stopButtonData);
-   
-  });
- }
+  handleButtonStopTopic(state: any): void {
+    if (state.stopPressed) {
+      console.log('state.stopPressed is ', state.stopPressed);
+      this.stopPressed = true;
+      this.handleButtonStop();
+    }
 
+    //clear the stop sign
+    if (!state.stopPressed) {
+      console.log('state.stopPressed is ', state.stopPressed);
+      this.stopPressed = false;
+      this.handleButtonStopClear();
+    }
+  }
   // read Latitude and Longitude
 
   handleCoordinates(state: any): void {
@@ -141,7 +146,6 @@ export class AppComponent implements OnInit {
       console.log('StopList is either undefined or empty');
       this.coordinates = [];
     }
-    
   }
   // Check if the stop names are the same
   areStopsSame(stopList: any[]): boolean {
