@@ -89,7 +89,7 @@ export class AppComponent implements OnInit {
 
           this.handleCoordinates(state);
           this.handleStopListData(state);
-          this.hendleStopButton(state);
+         
       
         } else {
           console.log('Waiting for data...');
@@ -99,12 +99,11 @@ export class AppComponent implements OnInit {
         console.error('Error occurred while fetching data:', error);
       },
     });
-    this.hendleStopButton(this.state);
+
   }
 
  // read the stop button
  hendleStopButton(state:any):void{
-  window.luminator.pis.init(this.mqttConfig);
   window.luminator.pis.client.updates().subscribe('pis/0/sensors/stop_button', (message: any) => {
     const stopButtonData = JSON.parse(message.payload.toString());
     console.log('Received stop button data:', stopButtonData);
