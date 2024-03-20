@@ -8,7 +8,7 @@
       "thumbnail": "WebApps/thumbnail.svg",
       "projectType": "MOBILE",
       "url": "/WebApps/webapps.weatherApp/index.html",
-      "pipelineName": "WeatherAppLayout"
+      
     }
   ]
 }
