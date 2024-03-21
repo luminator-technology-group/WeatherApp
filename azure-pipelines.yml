@@ -39,3 +39,26 @@ jobs:
       - script: npm run build
         displayName: "Build"
 
+      - task: CmdLine@2
+        displayName: Copy bundle files
+        inputs:
+          script: |
+            set -ex
+            mkdir -pv $(Build.ArtifactStagingDirectory)/WebApps/webapps.weatherApp
+            cp -r $(Build.SourcesDirectory)/dist/weather-app/* $(Build.ArtifactStagingDirectory)/WebApps/webapps.weatherApp
+            cp $(Build.SourcesDirectory)/bundle-description.json $(Build.ArtifactStagingDirectory)/WebApps
+            cp -r $(Build.SourcesDirectory)/thumbnail.svg $(Build.ArtifactStagingDirectory)/WebApps
+      - task: ArchiveFiles@2
+        displayName: Package files
+        inputs:
+          rootFolderOrFile: "$(Build.ArtifactStagingDirectory)/WebApps"
+          includeRootFolder: true
+          archiveType: "zip"
+          archiveFile: "$(Build.ArtifactStagingDirectory)/WeatherApp-$(Build.BuildNumber).zip"
+          replaceExistingArchive: true
+
+      - task: PublishPipelineArtifact@1
+        displayName: Publish bundle
+        inputs:
+          path: "$(Build.ArtifactStagingDirectory)/WeatherApp-$(Build.BuildNumber).zip"
+          artifactName: "layouts"
