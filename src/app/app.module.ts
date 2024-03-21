@@ -11,6 +11,7 @@ import { LatLngComponent } from './lat-lng/lat-lng.component';
 import { StoplistComponent } from './stop-list/stop-list.component';
 import { CurrentTimeComponent } from './current-time/current-time.component';
 import { FinalDestinationComponent } from './final-destination/final-destination.component';
+import { StopButtonComponent } from './stop-button/stop-button.component';
 
 
 
@@ -24,6 +25,7 @@ import { FinalDestinationComponent } from './final-destination/final-destination
     StoplistComponent,
     CurrentTimeComponent,
     FinalDestinationComponent,
+    StopButtonComponent,
 
   ],
   imports: [

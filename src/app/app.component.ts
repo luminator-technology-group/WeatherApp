@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { CoordinatesService } from './coordinates.service';
 import { StopListService } from './stop-list.service';
 import { WeatherCoordinates } from './app.model';
+import { StopButtonService } from './stop-button.service';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,7 @@ import { WeatherCoordinates } from './app.model';
         class="final-destination"
         [finalDestinationName]="finalDestinationName"
       ></app-final-destination>
+      <app-stop-button [stopPressed]="stopPressed"></app-stop-button>
       <app-current-time class="current-time"></app-current-time>
     </div>
     <app-stop-list
@@ -23,6 +25,7 @@ import { WeatherCoordinates } from './app.model';
       [weatherTemperature]="weatherTemperature"
     ></app-stop-list>
   `,
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   title = 'WeatherApp';
@@ -41,56 +44,54 @@ export class AppComponent implements OnInit {
 
   private handleStopListCounter = 0;
   private previousStopList: any[] = [];
+  stopPressed = false;
 
   constructor(
     private apiService: ApiService,
     private coordinatesService: CoordinatesService,
     private stopListService: StopListService,
+    private stopButtonService: StopButtonService,
   ) {}
+
+  //stop buton
+  handleButtonStop() {
+    this.stopButtonService.notifyButtonClick();
+  }
+
+  handleButtonStopClear() {
+    this.stopButtonService.notifyClearButtonClick();
+  }
 
   ngOnInit(): void {
     this.initConnection();
-
     this.getWeatherCoordinates(this.latitude, this.longitude);
   }
 
-
   // get weather coordinats
   getWeatherCoordinates(latitude: number, longitude: number): void {
-    console.log('Latitude:', latitude, 'Longitude:', longitude);
-
-    const weatherInfo = {
-      latitude: latitude,
-      longitude: longitude,
-      weatherData: null,
-    };
-    console.log('Weather Info', weatherInfo);
-
     this.apiService
       .getWeatherCoordinates(latitude, longitude)
       .subscribe((data) => {
-        weatherInfo.weatherData = data;
         this.weatherCoordinates = data;
         this.weatherTemperature = this.weatherCoordinates.temp;
         this.weatherWind = this.weatherCoordinates.winSpd;
         if (this.weatherCoordinates && this.weatherCoordinates.wsymb) {
           this.weatherIconValue = this.weatherCoordinates.wsymb;
         }
-        console.log('Weather', weatherInfo);
+        console.log('Weather', data);
       });
   }
-  // connectet libpis with mqtt broker - Please check if this connection is okay I'm not sure about this code.
+  // connectet libpis with mqtt broker 
   initConnection() {
     window.luminator.pis.init(this.mqttConfig);
 
     window.luminator.pis.client.updates().subscribe({
       next: (state: any) => {
         if (state && state.stopList) {
-          //console.log('List data from init:', state.stopList);
           console.log('state is ', state);
-
           this.handleCoordinates(state);
           this.handleStopListData(state);
+          this.handleButtonStopTopic(state);
         } else {
           console.log('Waiting for data...');
         }
@@ -101,6 +102,20 @@ export class AppComponent implements OnInit {
     });
   }
 
+  handleButtonStopTopic(state: any): void {
+    if (state.stopPressed) {
+      console.log('state.stopPressed is ', state.stopPressed);
+      this.stopPressed = true;
+      this.handleButtonStop();
+    }
+
+    //clear the stop sign
+    if (!state.stopPressed) {
+      console.log('state.stopPressed is ', state.stopPressed);
+      this.stopPressed = false;
+      this.handleButtonStopClear();
+    }
+  }
   // read Latitude and Longitude
 
   handleCoordinates(state: any): void {
@@ -150,8 +165,6 @@ export class AppComponent implements OnInit {
   handleStopListData(state: any): void {
     if (state.stopList.length === this.stops.length) {
       this.handleStopListCounter++;
-      console.log('this.handleStopListCounter ', this.handleStopListCounter);
-
       if (this.handleStopListCounter >= 2 && this.handleStopListCounter <= 5) {
         if (this.handleStopListCounter == 5) {
           this.handleStopListCounter = 0;

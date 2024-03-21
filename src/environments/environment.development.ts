@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
   apiBasePath:
-    'http://localhost:8080/dynamic-weather/api/weather/position',
+    'https://backend01bbf643.ambitiouspond-18970074.northeurope.azurecontainerapps.io/dynamic-weather/api/weather/position',
 
 
   mqtt:{

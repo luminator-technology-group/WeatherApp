@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { StopButtonService } from '../stop-button.service';
 
 @Component({
   selector: 'app-stop-list',
@@ -16,8 +17,12 @@ import { Component, Input } from '@angular/core';
           <p>{{ calculateArrivalTime(stop.expectedArrivalTime) }}</p>
         </div>
         <div class="weather-info">
-          <app-weather-temperature [weatherTemperature]="weatherTemperature"></app-weather-temperature>
-          <app-weather-icon [weatherIconValue]="weatherIconValue"></app-weather-icon>
+          <app-weather-temperature
+            [weatherTemperature]="weatherTemperature"
+          ></app-weather-temperature>
+          <app-weather-icon
+            [weatherIconValue]="weatherIconValue"
+          ></app-weather-icon>
           <app-weather-wind [weatherWind]="weatherWind"></app-weather-wind>
         </div>
       </div>
@@ -40,7 +45,12 @@ export class StoplistComponent {
 
   updateDisplayedStops() {
     this.displayedStops = this.stops
-      .filter(stop => this.calculateArrivalTime(stop.expectedArrivalTime) !== 'Already arrived' && this.getMinutesRemaining(stop.expectedArrivalTime) > 0)
+      .filter(
+        (stop) =>
+          this.calculateArrivalTime(stop.expectedArrivalTime) !==
+            'Already arrived' &&
+          this.getMinutesRemaining(stop.expectedArrivalTime) > 0,
+      )
       .slice(0, 4);
   }
 
@@ -67,7 +77,9 @@ export class StoplistComponent {
     arrivalTime.setMinutes(minutes);
 
     const currentTime = new Date();
-    const differenceInMinutes = Math.round((arrivalTime.getTime() - currentTime.getTime()) / (1000 * 60));
+    const differenceInMinutes = Math.round(
+      (arrivalTime.getTime() - currentTime.getTime()) / (1000 * 60),
+    );
 
     return differenceInMinutes;
   }
