@@ -6,5 +6,5 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./stop-button.component.scss'],
 })
 export class StopButtonComponent {
-  @Input() stopPressed: boolean = false;
+  @Input() stopPressed = false;
 }

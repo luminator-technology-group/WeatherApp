@@ -10,7 +10,7 @@ import { StopButtonService } from '../stop-button.service';
       </div>
       <div class="stop-list-item" *ngFor="let stop of displayedStops">
         <div class="stop-name">
-          <button class="circle"></button>
+          <div class="circle"></div>
           <p>{{ stop.name }}</p>
         </div>
         <div class="arrival-time">
