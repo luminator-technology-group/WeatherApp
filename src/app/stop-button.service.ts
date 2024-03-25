@@ -10,6 +10,7 @@ export class StopButtonService {
 
 
   notifyButtonClick() {
+    console.log('notifyButtonClick');
     this.stopPressed = true;
     this.stopButtonService.next(this.stopPressed);
   }

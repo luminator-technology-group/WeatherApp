@@ -43,7 +43,7 @@ export class AppComponent implements OnInit {
   weatherCoordinates!: WeatherCoordinates;
 
   private handleStopListCounter = 0;
-  public previousStopList: any[] = [];
+  private previousStopList: any[] = [];
   stopPressed = false;
 
   constructor(
@@ -78,7 +78,8 @@ export class AppComponent implements OnInit {
         if (this.weatherCoordinates && this.weatherCoordinates.wsymb) {
           this.weatherIconValue = this.weatherCoordinates.wsymb;
         }
-        //console.log('Weather', data);
+        console.log('Weather', data);
+
       });
   }
   // connectet libpis with mqtt broker 
@@ -95,6 +96,7 @@ export class AppComponent implements OnInit {
           console.log('state is ', state);
           this.handleCoordinates(state);
           this.handleStopListData(state);
+          this.handleButtonStopTopic(state);
         } else {
           console.log('Waiting for data...');
         }
@@ -106,16 +108,17 @@ export class AppComponent implements OnInit {
   }
 
   handleButtonStopTopic(state: any): void {
+
     console.log('Current value of stopPressed:', this.stopPressed);
-    if (state.stopPressed === true) {
-      console.log('PRESSED BUTTON: ', state.stopPressed);
+    if (state.stopPressed) {
+      console.log('state.stopPressed is ', state.stopPressed);
+
       this.stopPressed = true;
       this.handleButtonStop();
     }
-
-    // clear the stop sign
-    if (state.stopPressed === false) {
-      console.log('CLEAR BUTTON  ', state.stopPressed);
+    //clear the stop sign
+    if (!state.stopPressed) {
+      console.log('state.stopPressed is ', state.stopPressed);
       this.stopPressed = false;
       this.handleButtonStopClear();
     }
