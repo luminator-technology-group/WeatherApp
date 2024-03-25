@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { StopButtonService } from '../stop-button.service';
 
 @Component({
   selector: 'app-stop-list',
