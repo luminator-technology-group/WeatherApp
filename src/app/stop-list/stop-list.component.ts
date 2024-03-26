@@ -50,7 +50,7 @@ export class StoplistComponent {
             'Already arrived' &&
           this.getMinutesRemaining(stop.expectedArrivalTime) > 0,
       )
-      .slice(0, 4);
+      .slice(0, 20);
   }
 
   calculateArrivalTime(expectedArrivalTime: string): string {
