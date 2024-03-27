@@ -1,4 +1,6 @@
-import { Component, Input } from '@angular/core';
+// stop-list.component.ts
+
+import { Component, Input, OnChanges } from '@angular/core';
 
 @Component({
   selector: 'app-stop-list',
@@ -17,29 +19,29 @@ import { Component, Input } from '@angular/core';
         </div>
         <div class="weather-info">
           <app-weather-temperature
-            [weatherTemperature]="weatherTemperature"
+            [weatherTemperature]="getWeatherTemperature(stop)"
           ></app-weather-temperature>
           <app-weather-icon
-            [weatherIconValue]="weatherIconValue"
+            [weatherIconValue]="getWeatherIconValue(stop)"
           ></app-weather-icon>
-          <app-weather-wind [weatherWind]="weatherWind"></app-weather-wind>
+          <app-weather-wind
+            [weatherWind]="getWeatherWind(stop)"
+          ></app-weather-wind>
         </div>
       </div>
     </div>
   `,
   styleUrls: ['./stop-list.component.scss'],
 })
-export class StoplistComponent {
+export class StoplistComponent implements OnChanges {
   @Input() stops: any[] = [];
-  @Input() weatherIconValue = 0;
-  @Input() weatherData: any;
-  @Input() weatherWind = 0;
-  @Input() weatherTemperature = 0;
+  @Input() weatherData: any[] = [];
 
   displayedStops: any[] = [];
 
   ngOnChanges() {
     this.updateDisplayedStops();
+    this.logStopsWithWeather(); // Dodaj wywołanie funkcji logującej
   }
 
   updateDisplayedStops() {
@@ -82,4 +84,30 @@ export class StoplistComponent {
 
     return differenceInMinutes;
   }
+
+  getWeatherTemperature(stop: any): number {
+    const weatherForStop = this.weatherData.find(weather => weather.cityName === stop.name);
+    return weatherForStop ? weatherForStop.temp : 0;
+  }
+  
+  getWeatherIconValue(stop: any): number {
+    const weatherForStop = this.weatherData.find(weather => weather.cityName === stop.name);
+    return weatherForStop ? weatherForStop.wsymb : 0;
+  }
+  
+  getWeatherWind(stop: any): number {
+    const weatherForStop = this.weatherData.find(weather => weather.cityName === stop.name);
+    return weatherForStop ? weatherForStop.winSpd : 0;
+  }
+  
+  logStopsWithWeather() {
+    // Logging of the names of the stops and the corresponding weather
+    this.displayedStops.forEach((stop) => {
+      const weatherForStop = this.weatherData.find(weather => weather.cityName.includes(stop.name));
+      console.log(
+        `Stop: ${stop.name}, Weather: ${weatherForStop ? JSON.stringify(weatherForStop) : 'No data'}`,
+      );
+    });
+  }
+  
 }

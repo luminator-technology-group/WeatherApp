@@ -47,6 +47,7 @@ export interface Coordinates {
   longitude: number;
 }
 export interface WeatherCoordinates {
+  cityName: string;
   temp: number;
   winSpd: number;
   wsymb?: number; 
