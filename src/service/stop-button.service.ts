@@ -6,9 +6,8 @@ import { Subject } from 'rxjs';
 })
 export class StopButtonService {
   private stopButtonService = new Subject<boolean>();
-  stopPressed = true;
+  stopPressed = false;
 
-  buttonClick = this.stopButtonService.asObservable();
 
   notifyButtonClick() {
     console.log('notifyButtonClick');
