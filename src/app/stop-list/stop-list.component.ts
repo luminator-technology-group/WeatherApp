@@ -19,12 +19,17 @@ import { Component, Input, OnChanges } from '@angular/core';
         </div>
         <div class="weather-info">
           <app-weather-temperature
+            *ngIf="isNumber(getWeatherTemperature(stop))"
             [weatherTemperature]="getWeatherTemperature(stop)"
           ></app-weather-temperature>
+
           <app-weather-icon
+            *ngIf="isNumber(getWeatherIconValue(stop))"
             [weatherIconValue]="getWeatherIconValue(stop)"
           ></app-weather-icon>
+
           <app-weather-wind
+            *ngIf="isNumber(getWeatherWind(stop))"
             [weatherWind]="getWeatherWind(stop)"
           ></app-weather-wind>
         </div>
@@ -41,7 +46,6 @@ export class StoplistComponent implements OnChanges {
 
   ngOnChanges() {
     this.updateDisplayedStops();
-    this.logStopsWithWeather(); // Dodaj wywołanie funkcji logującej
   }
 
   updateDisplayedStops() {
@@ -86,28 +90,38 @@ export class StoplistComponent implements OnChanges {
   }
 
   getWeatherTemperature(stop: any): number {
-    const weatherForStop = this.weatherData.find(weather => weather.cityName === stop.name);
-    return weatherForStop ? weatherForStop.temp : 0;
+    const weatherForStop = this.weatherData.find(
+      (weather) => weather.cityName === stop.name,
+    );
+    if (weatherForStop) {
+      return weatherForStop.temp;
+    } else {
+      return NaN;
+    }
   }
-  
+
   getWeatherIconValue(stop: any): number {
-    const weatherForStop = this.weatherData.find(weather => weather.cityName === stop.name);
-    return weatherForStop ? weatherForStop.wsymb : 0;
+    const weatherForStop = this.weatherData.find(
+      (weather) => weather.cityName === stop.name,
+    );
+    if (weatherForStop) {
+      return weatherForStop.wsymb;
+    } else {
+      return NaN;
+    }
   }
-  
+
   getWeatherWind(stop: any): number {
-    const weatherForStop = this.weatherData.find(weather => weather.cityName === stop.name);
-    return weatherForStop ? weatherForStop.winSpd : 0;
+    const weatherForStop = this.weatherData.find(
+      (weather) => weather.cityName === stop.name,
+    );
+    if (weatherForStop) {
+      return weatherForStop.winSpd;
+    } else {
+      return NaN;
+    }
   }
-  
-  logStopsWithWeather() {
-    // Logging of the names of the stops and the corresponding weather
-    this.displayedStops.forEach((stop) => {
-      const weatherForStop = this.weatherData.find(weather => weather.cityName.includes(stop.name));
-      console.log(
-        `Stop: ${stop.name}, Weather: ${weatherForStop ? JSON.stringify(weatherForStop) : 'No data'}`,
-      );
-    });
+  isNumber(value: any): boolean {
+    return !isNaN(value) && typeof value === 'number';
   }
-  
 }
