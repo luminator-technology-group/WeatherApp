@@ -6,6 +6,7 @@ import { WeatherCoordinates } from './app.model';
 import { StopButtonService } from '../service/stop-button.service';
 import { LocationService } from '../service/location.service';
 import { filter } from 'rxjs';
+import { CoordinatesService } from '../service/coordinates.service';
 
 @Component({
   selector: 'app-root',
@@ -50,6 +51,7 @@ export class AppComponent implements OnInit {
     private stopListService: StopListService,
     private stopButtonService: StopButtonService,
     private locationService: LocationService,
+    private coordinatesService: CoordinatesService,
   ) {}
 
   //stop buton
@@ -77,6 +79,23 @@ export class AppComponent implements OnInit {
         error(err) {
           console.error('Something wrong occurred: ' + err);
         },
+      });
+  }
+
+  // get weather coordinats
+  fetWeatherCoordinates(latitude: number, longitude: number): void {
+    this.apiService
+      .getWeatherCoordinates(latitude, longitude)
+      .pipe(filter((data) => data !== undefined))
+      .subscribe({
+        next: (data) => {
+          this.weatherDataArray.push(data);
+          console.log('API weather:', data);
+        },
+        error(err) {
+          console.error('Something wrong occurred: ' + err);
+        },
+
       });
   }
 
@@ -114,6 +133,35 @@ export class AppComponent implements OnInit {
     if (state.stopPressed === false) {
       this.stopPressed = false;
       this.handleButtonStopClear();
+    }
+  }
+  handleCoordinates(state: any): void {
+    if (state.stopList && state.stopList.length > 0) {
+      const areStopsSame = this.areStopsSame(state.stopList);
+      if (areStopsSame) {
+        console.log('data is same ');
+        return;
+      }
+      // If the data is different, update the previous stop list
+      this.previousStopList = state.stopList;
+
+      // Process the coordinates
+      const coordinate = this.coordinatesService.processCoordinates(
+        state.stopList,
+      );
+      if (coordinate) {
+        this.coordinates = coordinate;
+        this.coordinates.forEach((element) => {
+          this.fetWeatherCoordinates(element.latitude, element.longitude);
+      
+        });
+      } else {
+        console.log('Failed to process coordinates.');
+        this.coordinates = []; // Set an empty array when the coordinates could not be processed
+      }
+    } else {
+      console.log('StopList is either undefined or empty');
+      this.coordinates = [];
     }
   }
 
