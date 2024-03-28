@@ -3,6 +3,9 @@ export const environment = {
   apiBasePath:
     'https://backend01bbf643.ambitiouspond-18970074.northeurope.azurecontainerapps.io/dynamic-weather/api/weather/position',
 
+    apiBasePathLocation:
+    'https://backend01bbf643.ambitiouspond-18970074.northeurope.azurecontainerapps.io/dynamic-weather/api/weather/location',
+
 
   mqtt:{
     hostname: 'luminator-realtime-emqx-dev-weu-01.westeurope.azurecontainer.io',
@@ -12,3 +15,4 @@ export const environment = {
     displayId: '1'
   },
 };
+

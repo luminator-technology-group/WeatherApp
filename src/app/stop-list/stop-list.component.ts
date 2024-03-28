@@ -1,5 +1,4 @@
-import { Component, Input } from '@angular/core';
-import { StopButtonService } from '../stop-button.service';
+import { Component, Input, OnChanges } from '@angular/core';
 
 @Component({
   selector: 'app-stop-list',
@@ -20,24 +19,28 @@ import { StopButtonService } from '../stop-button.service';
      
         <div class="weather-info">
           <app-weather-temperature
-            [weatherTemperature]="weatherTemperature"
+            *ngIf="isNumber(getWeatherTemperature(stop))"
+            [weatherTemperature]="getWeatherTemperature(stop)"
           ></app-weather-temperature>
+
           <app-weather-icon
-            [weatherIconValue]="weatherIconValue"
+            *ngIf="isNumber(getWeatherIconValue(stop))"
+            [weatherIconValue]="getWeatherIconValue(stop)"
           ></app-weather-icon>
-          <app-weather-wind [weatherWind]="weatherWind"></app-weather-wind>
+
+          <app-weather-wind
+            *ngIf="isNumber(getWeatherWind(stop))"
+            [weatherWind]="getWeatherWind(stop)"
+          ></app-weather-wind>
         </div>
       </div>
     </div>
   `,
   styleUrls: ['./stop-list.component.scss'],
 })
-export class StoplistComponent {
+export class StoplistComponent implements OnChanges {
   @Input() stops: any[] = [];
-  @Input() weatherIconValue = 0;
-  @Input() weatherData: any;
-  @Input() weatherWind = 0;
-  @Input() weatherTemperature = 0;
+  @Input() weatherData: any[] = [];
 
   displayedStops: any[] = [];
 
@@ -53,7 +56,7 @@ export class StoplistComponent {
             'Already arrived' &&
           this.getMinutesRemaining(stop.expectedArrivalTime) > 0,
       )
-      .slice(0, 4);
+      .slice(0, 20);
   }
 
   calculateArrivalTime(expectedArrivalTime: string): string {
@@ -84,5 +87,42 @@ export class StoplistComponent {
     );
 
     return differenceInMinutes;
+  }
+
+  getWeatherTemperature(stop: any): number {
+    const weatherForStop = this.weatherData.find(
+      (weather) => weather && weather.cityName === stop.name,
+    );
+    if (weatherForStop) {
+      return weatherForStop.temp;
+    } else {
+      return NaN;
+    }
+  }
+
+  getWeatherIconValue(stop: any): number {
+    const weatherForStop = this.weatherData.find(
+      (weather) => weather && weather.cityName === stop.name,
+    );
+    if (weatherForStop) {
+      return weatherForStop.wsymb;
+    } else {
+      return NaN;
+    }
+  }
+
+  getWeatherWind(stop: any): number {
+    const weatherForStop = this.weatherData.find(
+      (weather) => weather && weather.cityName === stop.name,
+    );
+    if (weatherForStop) {
+      return weatherForStop.winSpd;
+    } else {
+      return NaN;
+    }
+  }
+
+  isNumber(value: any): boolean {
+    return !isNaN(value) && typeof value === 'number';
   }
 }

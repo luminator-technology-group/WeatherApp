@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from './api.service';
+import { ApiService } from '../service/api.service';
 import { environment } from 'src/environments/environment';
-import { CoordinatesService } from './coordinates.service';
-import { StopListService } from './stop-list.service';
+import { StopListService } from '../service/stop-list.service';
 import { WeatherCoordinates } from './app.model';
-import { StopButtonService } from './stop-button.service';
+import { CoordinatesService } from '../service/coordinates.service';
+import { StopButtonService } from '../service/stop-button.service';
+import { LocationService } from '../service/location.service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -19,10 +21,7 @@ import { StopButtonService } from './stop-button.service';
     </div>
     <app-stop-list
       [stops]="stops"
-      [weatherIconValue]="weatherIconValue"
-      [weatherData]="weatherData"
-      [weatherWind]="weatherWind"
-      [weatherTemperature]="weatherTemperature"
+      [weatherData]="weatherDataArray"
     ></app-stop-list>
   `,
   styleUrls: ['./app.component.scss'],
@@ -41,16 +40,18 @@ export class AppComponent implements OnInit {
   coordinates: { latitude: number; longitude: number }[] = [];
   finalDestinationName = '';
   weatherCoordinates!: WeatherCoordinates;
-
+  stopPressed = false;
   private handleStopListCounter = 0;
   private previousStopList: any[] = [];
-  stopPressed = false;
+  weatherDataArray: any[] = [];
+  cityName = '';
 
   constructor(
     private apiService: ApiService,
     private coordinatesService: CoordinatesService,
     private stopListService: StopListService,
     private stopButtonService: StopButtonService,
+    private locationService: LocationService,
   ) {}
 
   //stop buton
@@ -79,24 +80,37 @@ export class AppComponent implements OnInit {
           this.weatherIconValue = this.weatherCoordinates.wsymb;
         }
         console.log('Weather', data);
-
       });
   }
-  // connectet libpis with mqtt broker 
+  fetchWeatherByCityName(cityName: string): void {
+    this.apiService
+      .getWeatherCityName(cityName)
+      .pipe(filter((data) => data !== undefined))
+      .subscribe({
+        next: (data) => {
+          this.weatherDataArray.push(data);
+          console.log('API weather:', data);
+        },
+        error(err) {
+          console.error('Something wrong occurred: ' + err);
+        },
+      });
+  }
+  // connectet libpis with mqtt broker
   initConnection() {
     window.luminator.pis.init(this.mqttConfig);
 
     window.luminator.pis.client.updates().subscribe({
       next: (state: any) => {
-        if(state){
-          console.log('state stop button ', state);
+        if (state) {
+          // console.log('state stop button ', state);
           this.handleButtonStopTopic(state);
         }
         if (state && state.stopList) {
-          console.log('state is ', state);
-          this.handleCoordinates(state);
+          // console.log('state is ', state);
           this.handleStopListData(state);
           this.handleButtonStopTopic(state);
+          this.handleLocation(state);
         } else {
           console.log('Waiting for data...');
         }
@@ -108,21 +122,18 @@ export class AppComponent implements OnInit {
   }
 
   handleButtonStopTopic(state: any): void {
-
-    console.log('Current value of stopPressed:', this.stopPressed);
     if (state.stopPressed) {
       console.log('state.stopPressed is ', state.stopPressed);
-
       this.stopPressed = true;
       this.handleButtonStop();
     }
+
     //clear the stop sign
     if (!state.stopPressed) {
       console.log('state.stopPressed is ', state.stopPressed);
       this.stopPressed = false;
       this.handleButtonStopClear();
     }
-    console.log('New value of stopPressed:', this.stopPressed);
   }
   // read Latitude and Longitude
 
@@ -144,7 +155,7 @@ export class AppComponent implements OnInit {
         this.coordinates = coordinate;
         this.coordinates.forEach((element) => {
           this.getWeatherCoordinates(element.latitude, element.longitude);
-      
+          console.log('handleCoordinates', this.coordinates);
         });
       } else {
         console.log('Failed to process coordinates.');
@@ -167,6 +178,32 @@ export class AppComponent implements OnInit {
     }
     return true;
   }
+  // get location
+  handleLocation(state: any): void {
+    if (state.stopList && state.stopList.length > 0) {
+      const areStopsSame = this.areStopsSame(state.stopList);
+      if (areStopsSame) {
+        console.log('data is same ');
+        return;
+      }
+      // If the data is different, update the previous stop list
+      this.previousStopList = state.stopList;
+      // Process the location data (city name)
+      const locations = this.locationService.processLocation(state.stopList);
+      console.log('Data from  location service mqtt', locations);
+      if (locations) {
+        locations.forEach((location) => {
+          this.fetchWeatherByCityName(location.name);
+          console.log('NAME CITY', this.cityName);
+        });
+      } else {
+        console.log('Failed to process cityNames.');
+        // Set an empty array when the cityNames could not be processed
+      }
+    } else {
+      console.log('StopList is either undefined or empty');
+    }
+  }
 
   // get stopList
 
@@ -183,6 +220,7 @@ export class AppComponent implements OnInit {
 
     const parsedStopList = this.parseStopList(state.stopList);
     this.stops = parsedStopList;
+    console.log('handleStopListData ', this.stops);
     this.stopListService.updateStops(parsedStopList);
     // get final destination name
     this.finalDestinationName = state.finalDestinationName;
