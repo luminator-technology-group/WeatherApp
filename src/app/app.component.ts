@@ -40,7 +40,7 @@ export class AppComponent implements OnInit {
   finalDestinationName = '';
   weatherCoordinates!: WeatherCoordinates;
   cityName = '';
-  stopPressed: boolean = false;
+  stopPressed = false;
   private handleStopListCounter = 0;
   private previousStopList: any[] = [];
   weatherDataArray: any[] = [];
