@@ -7,8 +7,24 @@
       "paths": ["WebApps/webapps.weatherApp"],
       "thumbnail": "WebApps/thumbnail.svg",
       "projectType": "MOBILE",
-      "url": "/WebApps/webapps.weatherApp/index.html"
-      
+      "url": "/WebApps/webapps.weatherApp/index.html",
+      "parameters": [
+        {
+          "name": "weatherLookupType",
+          "options": [
+            {
+              "value": "GPS",
+              "label": "GPS"
+            },
+            {
+              "value": "Location Name",
+              "label": "Location Name"
+            }
+          ],
+          "label": "Weather Lookup Type",
+          "type": "ENUM"
+        }
+      ]
     }
   ]
 }
