@@ -1,5 +1,3 @@
-// stop-list.component.ts
-
 import { Component, Input, OnChanges } from '@angular/core';
 
 @Component({
@@ -91,7 +89,7 @@ export class StoplistComponent implements OnChanges {
 
   getWeatherTemperature(stop: any): number {
     const weatherForStop = this.weatherData.find(
-      (weather) => weather.cityName === stop.name,
+      (weather) => weather && weather.cityName === stop.name,
     );
     if (weatherForStop) {
       return weatherForStop.temp;
@@ -102,7 +100,7 @@ export class StoplistComponent implements OnChanges {
 
   getWeatherIconValue(stop: any): number {
     const weatherForStop = this.weatherData.find(
-      (weather) => weather.cityName === stop.name,
+      (weather) => weather && weather.cityName === stop.name,
     );
     if (weatherForStop) {
       return weatherForStop.wsymb;
@@ -113,7 +111,7 @@ export class StoplistComponent implements OnChanges {
 
   getWeatherWind(stop: any): number {
     const weatherForStop = this.weatherData.find(
-      (weather) => weather.cityName === stop.name,
+      (weather) => weather && weather.cityName === stop.name,
     );
     if (weatherForStop) {
       return weatherForStop.winSpd;
@@ -121,6 +119,7 @@ export class StoplistComponent implements OnChanges {
       return NaN;
     }
   }
+
   isNumber(value: any): boolean {
     return !isNaN(value) && typeof value === 'number';
   }

@@ -5,6 +5,7 @@ import { StopListService } from '../service/stop-list.service';
 import { WeatherCoordinates } from './app.model';
 import { StopButtonService } from '../service/stop-button.service';
 import { LocationService } from '../service/location.service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -18,9 +19,9 @@ import { LocationService } from '../service/location.service';
       <app-current-time class="current-time"></app-current-time>
     </div>
     <app-stop-list
-  [stops]="stops"
-  [weatherData]="weatherDataArray"
-></app-stop-list>
+      [stops]="stops"
+      [weatherData]="weatherDataArray"
+    ></app-stop-list>
   `,
   styleUrls: ['./app.component.scss'],
 })
@@ -38,12 +39,11 @@ export class AppComponent implements OnInit {
   coordinates: { latitude: number; longitude: number }[] = [];
   finalDestinationName = '';
   weatherCoordinates!: WeatherCoordinates;
-  cityName = 'Herrljunga';
-  stopPressed = false;
+  cityName = '';
+  stopPressed: boolean = false;
   private handleStopListCounter = 0;
   private previousStopList: any[] = [];
   weatherDataArray: any[] = [];
-
 
   constructor(
     private apiService: ApiService,
@@ -64,21 +64,20 @@ export class AppComponent implements OnInit {
     this.initConnection();
     this.fetchWeatherByCityName(this.cityName);
   }
+
   fetchWeatherByCityName(cityName: string): void {
-    this.apiService.getWeatherCityName(cityName).subscribe({
-      next: (data) => {
-        if (data) {
+    this.apiService
+      .getWeatherCityName(cityName)
+      .pipe(filter((data) => data !== undefined))
+      .subscribe({
+        next: (data) => {
           this.weatherDataArray.push(data);
           console.log('API weather:', data);
-        }
-      },
-      error(err) {
-        console.error('Something wrong occurred: ' + err);
-      },
-      complete() {
-        console.log('Done');
-      },
-    });
+        },
+        error(err) {
+          console.error('Something wrong occurred: ' + err);
+        },
+      });
   }
 
   // connectet libpis with mqtt broker
@@ -88,11 +87,11 @@ export class AppComponent implements OnInit {
     window.luminator.pis.client.updates().subscribe({
       next: (state: any) => {
         if (state) {
-         // console.log('state stop button ', state);
+          // console.log('state stop button ', state);
           this.handleButtonStopTopic(state);
         }
         if (state && state.stopList) {
-         // console.log('state is ', state);
+          // console.log('state is ', state);
           this.handleStopListData(state);
           this.handleButtonStopTopic(state);
           this.handleLocation(state);
@@ -107,19 +106,15 @@ export class AppComponent implements OnInit {
   }
 
   handleButtonStopTopic(state: any): void {
-   // console.log('Current value of stopPressed:', this.stopPressed);
     if (state.stopPressed === true) {
-    //  console.log('PRESSED BUTTON: ', state.stopPressed);
       this.stopPressed = true;
       this.handleButtonStop();
     }
     // clear the stop sign
     if (state.stopPressed === false) {
-    //  console.log('CLEAR BUTTON  ', state.stopPressed);
       this.stopPressed = false;
       this.handleButtonStopClear();
     }
-    //console.log('New value of stopPressed:', this.stopPressed);
   }
 
   // Check if the stop names are the same
@@ -175,7 +170,7 @@ export class AppComponent implements OnInit {
     }
     const parsedStopList = this.parseStopList(state.stopList);
     this.stops = parsedStopList;
-    //console.log('handleStopListData ', this.stops);
+    console.log('handleStopListData ', this.stops);
     this.stopListService.updateStops(parsedStopList);
     // get final destination name
     this.finalDestinationName = state.finalDestinationName;
