@@ -144,7 +144,7 @@ export class AppComponent implements OnInit {
         this.coordinates = coordinate;
         this.coordinates.forEach((element) => {
           this.getWeatherCoordinates(element.latitude, element.longitude);
-          //console.log('handleCoordinates', this.coordinates);
+      
         });
       } else {
         console.log('Failed to process coordinates.');
@@ -183,7 +183,6 @@ export class AppComponent implements OnInit {
 
     const parsedStopList = this.parseStopList(state.stopList);
     this.stops = parsedStopList;
-    //console.log('handleStopListData ', this.stops);
     this.stopListService.updateStops(parsedStopList);
     // get final destination name
     this.finalDestinationName = state.finalDestinationName;
