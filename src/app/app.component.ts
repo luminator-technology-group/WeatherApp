@@ -7,7 +7,6 @@ import { CoordinatesService } from '../service/coordinates.service';
 import { StopButtonService } from '../service/stop-button.service';
 import { LocationService } from '../service/location.service';
 import { filter } from 'rxjs';
-
 @Component({
   selector: 'app-root',
   template: `
@@ -65,23 +64,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.initConnection();
-    this.getWeatherCoordinates(this.latitude, this.longitude);
+    this.fetWeatherCoordinates(this.latitude, this.longitude);
+    this.fetchWeatherByCityName(this.cityName);
   }
 
-  // get weather coordinats
-  getWeatherCoordinates(latitude: number, longitude: number): void {
-    this.apiService
-      .getWeatherCoordinates(latitude, longitude)
-      .subscribe((data) => {
-        this.weatherCoordinates = data;
-        this.weatherTemperature = this.weatherCoordinates.temp;
-        this.weatherWind = this.weatherCoordinates.winSpd;
-        if (this.weatherCoordinates && this.weatherCoordinates.wsymb) {
-          this.weatherIconValue = this.weatherCoordinates.wsymb;
-        }
-        console.log('Weather', data);
-      });
-  }
   fetchWeatherByCityName(cityName: string): void {
     this.apiService
       .getWeatherCityName(cityName)
@@ -96,6 +82,25 @@ export class AppComponent implements OnInit {
         },
       });
   }
+
+
+  // get weather coordinats
+  fetWeatherCoordinates(latitude: number, longitude: number): void {
+    this.apiService
+      .getWeatherCoordinates(latitude, longitude)
+      .pipe(filter((data) => data !== undefined))
+      .subscribe({
+        next: (data) => {
+          this.weatherDataArray.push(data);
+          console.log('API weather:', data);
+        },
+        error(err) {
+          console.error('Something wrong occurred: ' + err);
+        },
+
+      });
+  }
+
   // connectet libpis with mqtt broker
   initConnection() {
     window.luminator.pis.init(this.mqttConfig);
@@ -135,8 +140,8 @@ export class AppComponent implements OnInit {
       this.handleButtonStopClear();
     }
   }
+  
   // read Latitude and Longitude
-
   handleCoordinates(state: any): void {
     if (state.stopList && state.stopList.length > 0) {
       const areStopsSame = this.areStopsSame(state.stopList);
@@ -154,7 +159,7 @@ export class AppComponent implements OnInit {
       if (coordinate) {
         this.coordinates = coordinate;
         this.coordinates.forEach((element) => {
-          this.getWeatherCoordinates(element.latitude, element.longitude);
+          this.fetWeatherCoordinates(element.latitude, element.longitude);
           console.log('handleCoordinates', this.coordinates);
         });
       } else {
