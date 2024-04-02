@@ -8,6 +8,7 @@ import { Component, Input, OnChanges } from '@angular/core';
         <p>Not found</p>
       </div>
       <div class="stop-list-item" *ngFor="let stop of displayedStops">
+ 
         <div class="stop-name">
           <div class="circle"></div>
           <p>{{ stop.name }}</p>
@@ -15,6 +16,7 @@ import { Component, Input, OnChanges } from '@angular/core';
         <div class="arrival-time">
           <p>{{ calculateArrivalTime(stop.expectedArrivalTime) }}</p>
         </div>
+     
         <div class="weather-info">
           <app-weather-temperature
             *ngIf="isNumber(getWeatherTemperature(stop))"
