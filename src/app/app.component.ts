@@ -7,8 +7,6 @@ import { CoordinatesService } from '../service/coordinates.service';
 import { StopButtonService } from '../service/stop-button.service';
 import { LocationService } from '../service/location.service';
 import { filter } from 'rxjs';
-import { CoordinatesService } from '../service/coordinates.service';
-
 @Component({
   selector: 'app-root',
   template: `
@@ -53,7 +51,6 @@ export class AppComponent implements OnInit {
     private stopListService: StopListService,
     private stopButtonService: StopButtonService,
     private locationService: LocationService,
-    private coordinatesService: CoordinatesService,
   ) {}
 
   //stop buton
@@ -67,7 +64,8 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.initConnection();
-    this.getWeatherCoordinates(this.latitude, this.longitude);
+    this.fetWeatherCoordinates(this.latitude, this.longitude);
+    this.fetchWeatherByCityName(this.cityName);
   }
 
   fetchWeatherByCityName(cityName: string): void {
@@ -161,7 +159,7 @@ export class AppComponent implements OnInit {
       if (coordinate) {
         this.coordinates = coordinate;
         this.coordinates.forEach((element) => {
-          this.getWeatherCoordinates(element.latitude, element.longitude);
+          this.fetWeatherCoordinates(element.latitude, element.longitude);
           console.log('handleCoordinates', this.coordinates);
         });
       } else {
