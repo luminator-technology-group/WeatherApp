@@ -1,0 +1,30 @@
+{
+  "layouts": [
+    {
+      "id": "8f367032-e69d-11ee-b370-7bc4fe9bcd7f",
+      "name": "Weather",
+      "description": "Show local weather",
+      "paths": ["WebApps/webapps.weatherApp"],
+      "thumbnail": "WebApps/thumbnail.svg",
+      "projectType": "MOBILE",
+      "url": "/WebApps/webapps.weatherApp/index.html",
+      "parameters": [
+        {
+          "name": "weatherLookupType",
+          "options": [
+            {
+              "value": "GPS",
+              "label": "GPS"
+            },
+            {
+              "value": "Location Name",
+              "label": "Location Name"
+            }
+          ],
+          "label": "Weather Lookup Type",
+          "type": "ENUM"
+        }
+      ]
+    }
+  ]
+}

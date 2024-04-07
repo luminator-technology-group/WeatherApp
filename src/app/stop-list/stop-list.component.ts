@@ -8,7 +8,6 @@ import { Component, Input, OnChanges } from '@angular/core';
         <p>Not found</p>
       </div>
       <div class="stop-list-item" *ngFor="let stop of displayedStops">
- 
         <div class="stop-name">
           <div class="circle"></div>
           <p>{{ stop.name }}</p>
@@ -16,7 +15,7 @@ import { Component, Input, OnChanges } from '@angular/core';
         <div class="arrival-time">
           <p>{{ calculateArrivalTime(stop.expectedArrivalTime) }}</p>
         </div>
-     
+
         <div class="weather-info">
           <app-weather-temperature
             *ngIf="isNumber(getWeatherTemperature(stop))"
@@ -56,7 +55,7 @@ export class StoplistComponent implements OnChanges {
             'Already arrived' &&
           this.getMinutesRemaining(stop.expectedArrivalTime) > 0,
       )
-      .slice(0, 4);
+      .slice(0, 20);
   }
 
   calculateArrivalTime(expectedArrivalTime: string): string {
@@ -89,40 +88,152 @@ export class StoplistComponent implements OnChanges {
     return differenceInMinutes;
   }
 
-  getWeatherTemperature(stop: any): number {
+  getWeatherTemperatureForCoordinates(stop: any): number {
+    //console.log("STOP", stop)
+    //console.log("this.weatherData 1 ", this.weatherData);
     const weatherForStop = this.weatherData.find(
-      (weather) => weather && weather.cityName === stop.name,
+      (weather) =>
+        weather &&
+        weather.latitude === stop.latitude &&
+        weather.longitude === stop.longitude,
     );
     if (weatherForStop) {
-      return weatherForStop.temp;
+      return weatherForStop.data.temp;
+    } else {
+      return NaN;
+    }
+  }
+
+  getWeatherTemperatureForCity(stop: any): number {
+    const weatherForStop = this.weatherData.find(
+      (weather) =>
+        weather && weather.data && weather.data.cityName === stop.name,
+    );
+    if (weatherForStop) {
+      return weatherForStop.data.temp;
+    } else {
+      return NaN;
+    }
+  }
+
+  getWeatherTemperature(stop: any): number {
+    const weather = this.weatherData.find(
+      (weather) => weather && weather.weatherLookupType,
+    );
+    if (
+      weather &&
+      weather.weatherLookupType &&
+      weather.weatherLookupType === 'GPS'
+    ) {
+      return this.getWeatherTemperatureForCoordinates(stop);
+    } else if (
+      weather &&
+      weather.weatherLookupType &&
+      weather.weatherLookupType === 'Location Name'
+    ) {
+      return this.getWeatherTemperatureForCity(stop);
+    } else return NaN;
+  }
+
+  getWeatherIconValueForCoordinates(stop: any): number {
+    const weatherForStop = this.weatherData.find(
+      (weather) =>
+        weather &&
+        weather.latitude === stop.latitude &&
+        weather.longitude === stop.longitude,
+    );
+    if (weatherForStop) {
+      return weatherForStop.data.wsymb;
+    } else {
+      return NaN;
+    }
+  }
+
+  getWeatherIconValueForCity(stop: any): number {
+    const weatherForStop = this.weatherData.find(
+      (weather) => weather.data && weather.data.cityName === stop.name,
+    );
+    if (weatherForStop) {
+      return weatherForStop.data.wsymb;
     } else {
       return NaN;
     }
   }
 
   getWeatherIconValue(stop: any): number {
+    const weather = this.weatherData.find(
+      (weather) => weather && weather.weatherLookupType,
+    );
+
+    if (
+      weather &&
+      weather.weatherLookupType &&
+      weather.weatherLookupType === 'GPS'
+    ) {
+      return this.getWeatherIconValueForCoordinates(stop);
+    } else if (
+      weather &&
+      weather.weatherLookupType &&
+      weather.weatherLookupType === 'Location Name'
+    ) {
+      return this.getWeatherIconValueForCity(stop);
+    } else return NaN;
+  }
+  getWeatherWindForCoordinates(stop: any): number {
     const weatherForStop = this.weatherData.find(
-      (weather) => weather && weather.cityName === stop.name,
+      (weather) =>
+        weather &&
+        weather.latitude === stop.latitude &&
+        weather.longitude === stop.longitude,
     );
     if (weatherForStop) {
-      return weatherForStop.wsymb;
+      return weatherForStop.data.winSpd;
+    } else {
+      return NaN;
+    }
+  }
+
+  getWeatherWindForCity(stop: any): number {
+    const weatherForStop = this.weatherData.find(
+      (weather) =>
+        weather.data && weather.data && weather.data.cityName === stop.name,
+    );
+    if (weatherForStop) {
+      return weatherForStop.data.winSpd;
     } else {
       return NaN;
     }
   }
 
   getWeatherWind(stop: any): number {
-    const weatherForStop = this.weatherData.find(
-      (weather) => weather && weather.cityName === stop.name,
+    const weather = this.weatherData.find(
+      (weather) => weather && weather.weatherLookupType,
     );
-    if (weatherForStop) {
-      return weatherForStop.winSpd;
-    } else {
-      return NaN;
-    }
+
+    if (
+      weather &&
+      weather.weatherLookupType &&
+      weather.weatherLookupType === 'GPS'
+    ) {
+      return this.getWeatherWindForCoordinates(stop);
+    } else if (
+      weather &&
+      weather.weatherLookupType &&
+      weather.weatherLookupType === 'Location Name'
+    ) {
+      return this.getWeatherWindForCity(stop);
+    } else return NaN;
   }
 
   isNumber(value: any): boolean {
     return !isNaN(value) && typeof value === 'number';
+  }
+  logStopsWithWeather() {
+    // Logging of the names of the stops and the corresponding weather
+    this.displayedStops.forEach((stop) => {
+      console.log(
+        `Stop: ${stop.name}, Weather: ${this.weatherData ? JSON.stringify(this.weatherData) : 'No data'}`,
+      );
+    });
   }
 }
