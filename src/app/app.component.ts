@@ -7,6 +7,7 @@ import { CoordinatesService } from '../service/coordinates.service';
 import { StopButtonService } from '../service/stop-button.service';
 import { LocationService } from '../service/location.service';
 import { filter } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-root',
   template: `
@@ -43,7 +44,8 @@ export class AppComponent implements OnInit {
   private handleStopListCounter = 0;
   private previousStopList: any[] = [];
   weatherDataArray: any[] = [];
-  cityName = '';
+  cityName = 'Herrljunga';
+  weatherLookupType: any;
 
   constructor(
     private apiService: ApiService,
@@ -51,6 +53,7 @@ export class AppComponent implements OnInit {
     private stopListService: StopListService,
     private stopButtonService: StopButtonService,
     private locationService: LocationService,
+    private http: HttpClient,
   ) {}
 
   //stop buton
@@ -64,8 +67,28 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.initConnection();
-    this.fetWeatherCoordinates(this.latitude, this.longitude);
-    this.fetchWeatherByCityName(this.cityName);
+
+    this.fetchWeatherConfig();
+
+    console.log('this.latitude ngOnInit', this.latitude);
+    console.log('this.cityName ngOnInit', this.cityName);
+    if (this.weatherLookupType === 'Location Name') {
+      this.fetWeatherCoordinates(this.latitude, this.longitude);
+      return;
+    }
+    if (this.weatherLookupType === 'Location Name') {
+      this.fetchWeatherByCityName(this.cityName);
+    }
+  }
+
+  fetchWeatherConfig() {
+    console.log('fetchWeatherConfig');
+    this.http.get<any>('assets/bundle-description.json').subscribe((data) => {
+      // Assuming there's only one layout in the JSON, otherwise iterate over layouts
+      //DEBUG: use options[0] or options[1] to read between gps or location
+      this.weatherLookupType = data.layouts[0].parameters[0].options[0].value;
+      console.log('Weather Lookup Type:', this.weatherLookupType);
+    });
   }
 
   fetchWeatherByCityName(cityName: string): void {
@@ -74,15 +97,18 @@ export class AppComponent implements OnInit {
       .pipe(filter((data) => data !== undefined))
       .subscribe({
         next: (data) => {
-          this.weatherDataArray.push(data);
-          console.log('API weather:', data);
+          const weatherDataWithweatherLookupType = {
+            weatherLookupType: this.weatherLookupType,
+            data: data,
+          };
+          this.weatherDataArray.push(weatherDataWithweatherLookupType);
         },
         error(err) {
+          if (err.statusText === 'OK') return;
           console.error('Something wrong occurred: ' + err);
         },
       });
   }
-
 
   // get weather coordinats
   fetWeatherCoordinates(latitude: number, longitude: number): void {
@@ -91,13 +117,17 @@ export class AppComponent implements OnInit {
       .pipe(filter((data) => data !== undefined))
       .subscribe({
         next: (data) => {
-          this.weatherDataArray.push(data);
-          console.log('API weather:', data);
+          const weatherDataWithLatLong = {
+            weatherLookupType: this.weatherLookupType,
+            latitude: latitude,
+            longitude: longitude,
+            data: data,
+          };
+          this.weatherDataArray.push(weatherDataWithLatLong);
         },
         error(err) {
           console.error('Something wrong occurred: ' + err);
         },
-
       });
   }
 
@@ -108,14 +138,19 @@ export class AppComponent implements OnInit {
     window.luminator.pis.client.updates().subscribe({
       next: (state: any) => {
         if (state) {
-          // console.log('state stop button ', state);
           this.handleButtonStopTopic(state);
         }
         if (state && state.stopList) {
-          // console.log('state is ', state);
           this.handleStopListData(state);
-          this.handleButtonStopTopic(state);
-          this.handleLocation(state);
+          if (this.weatherLookupType === 'GPS') {
+            console.log('GPS');
+            this.handleCoordinates(state);
+            return;
+          }
+          if (this.weatherLookupType === 'Location Name') {
+            console.log('Location Name');
+            this.handleLocation(state);
+          }
         } else {
           console.log('Waiting for data...');
         }
@@ -140,7 +175,7 @@ export class AppComponent implements OnInit {
       this.handleButtonStopClear();
     }
   }
-  
+
   // read Latitude and Longitude
   handleCoordinates(state: any): void {
     if (state.stopList && state.stopList.length > 0) {
@@ -160,7 +195,6 @@ export class AppComponent implements OnInit {
         this.coordinates = coordinate;
         this.coordinates.forEach((element) => {
           this.fetWeatherCoordinates(element.latitude, element.longitude);
-          console.log('handleCoordinates', this.coordinates);
         });
       } else {
         console.log('Failed to process coordinates.');
@@ -183,6 +217,7 @@ export class AppComponent implements OnInit {
     }
     return true;
   }
+
   // get location
   handleLocation(state: any): void {
     if (state.stopList && state.stopList.length > 0) {
