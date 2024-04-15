@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
+import { StopData, WeatherData } from '../app.model';
 
 @Component({
   selector: 'app-stop-list',
@@ -38,10 +39,10 @@ import { Component, Input, OnChanges } from '@angular/core';
   styleUrls: ['./stop-list.component.scss'],
 })
 export class StoplistComponent implements OnChanges {
-  @Input() stops: any[] = [];
-  @Input() weatherData: any[] = [];
+  @Input() stops: StopData[] = [];
+  @Input() weatherData: WeatherData[] = [];
 
-  displayedStops: any[] = [];
+  displayedStops: StopData[] = [];
 
   ngOnChanges() {
     this.updateDisplayedStops();
@@ -55,7 +56,7 @@ export class StoplistComponent implements OnChanges {
             'Already arrived' &&
           this.getMinutesRemaining(stop.expectedArrivalTime) > 0,
       )
-      .slice(0, 20);
+      .slice(0, 4);
   }
 
   calculateArrivalTime(expectedArrivalTime: string): string {
@@ -89,8 +90,6 @@ export class StoplistComponent implements OnChanges {
   }
 
   getWeatherTemperatureForCoordinates(stop: any): number {
-    //console.log("STOP", stop)
-    //console.log("this.weatherData 1 ", this.weatherData);
     const weatherForStop = this.weatherData.find(
       (weather) =>
         weather &&
@@ -227,13 +226,5 @@ export class StoplistComponent implements OnChanges {
 
   isNumber(value: any): boolean {
     return !isNaN(value) && typeof value === 'number';
-  }
-  logStopsWithWeather() {
-    // Logging of the names of the stops and the corresponding weather
-    this.displayedStops.forEach((stop) => {
-      console.log(
-        `Stop: ${stop.name}, Weather: ${this.weatherData ? JSON.stringify(this.weatherData) : 'No data'}`,
-      );
-    });
   }
 }
