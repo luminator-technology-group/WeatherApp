@@ -2,7 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../service/api.service';
 import { environment } from 'src/environments/environment';
 import { StopListService } from '../service/stop-list.service';
-import { WeatherCoordinates } from './app.model';
+import {
+  Coordinates,
+  StopData,
+  WeatherCoordinates,
+  WeatherData,
+} from './app.model';
 import { CoordinatesService } from '../service/coordinates.service';
 import { StopButtonService } from '../service/stop-button.service';
 import { LocationService } from '../service/location.service';
@@ -16,9 +21,12 @@ import { HttpClient } from '@angular/common/http';
         class="final-destination"
         [finalDestinationName]="finalDestinationName"
       ></app-final-destination>
+
       <app-stop-button [stopPressed]="stopPressed"></app-stop-button>
+
       <app-current-time class="current-time"></app-current-time>
     </div>
+
     <app-stop-list
       [stops]="stops"
       [weatherData]="weatherDataArray"
@@ -28,24 +36,24 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AppComponent implements OnInit {
   title = 'WeatherApp';
-  weatherData: any;
+  weatherData: WeatherData[] = [];
   weatherWind = 0;
   weatherTemperature = 0;
   weatherIconValue = 0;
   state: any;
-  stops: any[] = []; // Array to store stop data
+  stops: StopData[] = [];
   latitude = 0;
   longitude = 0;
   mqttConfig = environment.mqtt;
-  coordinates: { latitude: number; longitude: number }[] = [];
+  coordinates: Coordinates[] = [];
   finalDestinationName = '';
   weatherCoordinates!: WeatherCoordinates;
   stopPressed = false;
   private handleStopListCounter = 0;
-  private previousStopList: any[] = [];
-  weatherDataArray: any[] = [];
-  cityName = 'Herrljunga';
-  weatherLookupType: any;
+  private previousStopList: StopData[] = [];
+  weatherDataArray: WeatherData[] = [];
+  cityName = '';
+  weatherLookupType!: string;
 
   constructor(
     private apiService: ApiService,
@@ -70,8 +78,6 @@ export class AppComponent implements OnInit {
 
     this.fetchWeatherConfig();
 
-    console.log('this.latitude ngOnInit', this.latitude);
-    console.log('this.cityName ngOnInit', this.cityName);
     if (this.weatherLookupType === 'Location Name') {
       this.fetWeatherCoordinates(this.latitude, this.longitude);
       return;
@@ -82,12 +88,10 @@ export class AppComponent implements OnInit {
   }
 
   fetchWeatherConfig() {
-    console.log('fetchWeatherConfig');
     this.http.get<any>('assets/bundle-description.json').subscribe((data) => {
       // Assuming there's only one layout in the JSON, otherwise iterate over layouts
       //DEBUG: use options[0] or options[1] to read between gps or location
       this.weatherLookupType = data.layouts[0].parameters[0].options[0].value;
-      console.log('Weather Lookup Type:', this.weatherLookupType);
     });
   }
 
@@ -97,12 +101,15 @@ export class AppComponent implements OnInit {
       .pipe(filter((data) => data !== undefined))
       .subscribe({
         next: (data) => {
-          const weatherDataWithweatherLookupType = {
+          const weatherDataWithweatherLookupType: WeatherData = {
             weatherLookupType: this.weatherLookupType,
+            latitude: data.latitude,
+            longitude: data.longitude,
             data: data,
           };
           this.weatherDataArray.push(weatherDataWithweatherLookupType);
         },
+
         error(err) {
           if (err.statusText === 'OK') return;
           console.error('Something wrong occurred: ' + err);
@@ -181,12 +188,10 @@ export class AppComponent implements OnInit {
     if (state.stopList && state.stopList.length > 0) {
       const areStopsSame = this.areStopsSame(state.stopList);
       if (areStopsSame) {
-        console.log('data is same ');
         return;
       }
       // If the data is different, update the previous stop list
       this.previousStopList = state.stopList;
-
       // Process the coordinates
       const coordinate = this.coordinatesService.processCoordinates(
         state.stopList,
@@ -223,18 +228,15 @@ export class AppComponent implements OnInit {
     if (state.stopList && state.stopList.length > 0) {
       const areStopsSame = this.areStopsSame(state.stopList);
       if (areStopsSame) {
-        console.log('data is same ');
         return;
       }
       // If the data is different, update the previous stop list
       this.previousStopList = state.stopList;
       // Process the location data (city name)
       const locations = this.locationService.processLocation(state.stopList);
-      console.log('Data from  location service mqtt', locations);
       if (locations) {
         locations.forEach((location) => {
           this.fetchWeatherByCityName(location.name);
-          console.log('NAME CITY', this.cityName);
         });
       } else {
         console.log('Failed to process cityNames.');
@@ -257,15 +259,12 @@ export class AppComponent implements OnInit {
         return;
       }
     }
-
     const parsedStopList = this.parseStopList(state.stopList);
     this.stops = parsedStopList;
-    console.log('handleStopListData ', this.stops);
     this.stopListService.updateStops(parsedStopList);
     // get final destination name
     this.finalDestinationName = state.finalDestinationName;
     const retrievedStops = this.stopListService.getStops();
-    console.log('Retrieved stops:', retrievedStops);
   }
 
   parseStopList(stopList: any): any[] {

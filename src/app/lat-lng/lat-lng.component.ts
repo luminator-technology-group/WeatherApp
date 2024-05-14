@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Coordinates } from '../app.model';
 
 @Component({
   selector: 'app-lat-lng',
@@ -10,6 +11,5 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./lat-lng.component.scss'],
 })
 export class LatLngComponent {
-  @Input() coordinates: { latitude: number; longitude: number }[] = [];
-
+  @Input() coordinates: Coordinates[] = [];
 }

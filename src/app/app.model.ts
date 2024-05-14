@@ -23,7 +23,7 @@ export interface InitParams {
   preview?: boolean;
 }
 
-export interface LuminatorWindow  {
+export interface LuminatorWindow {
   luminator: {
     pis: {
       client: any;
@@ -50,5 +50,33 @@ export interface WeatherCoordinates {
   cityName: string;
   temp: number;
   winSpd: number;
-  wsymb?: number; 
+  wsymb?: number;
+}
+
+export interface WeatherData {
+  weatherLookupType: string;
+  latitude: number;
+  longitude: number;
+  data: {
+    temp: number;
+    winDir: number;
+    winSpd: number;
+    wsymb: number;
+    pmean: number;
+    cityName: string;
+  };
+}
+
+export interface StopData {
+  cancelled: boolean;
+  designation: string;
+  estimatedTimeOfArrivalRelative: number;
+  isTimingPoint: boolean;
+  latitude: number;
+  longitude: number;
+  minutesFromPrevious: number;
+  name: string;
+  name_Multilanguage: { [key: string]: string };
+  offsetTime: number;
+  expectedArrivalTime: string;
 }
