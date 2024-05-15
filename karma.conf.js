@@ -11,7 +11,6 @@ module.exports = function (config) {
       require("karma-jasmine-html-reporter"),
       require("karma-coverage"),
       require("@angular-devkit/build-angular/plugins/karma"),
-
     ],
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
@@ -33,22 +32,18 @@ module.exports = function (config) {
         // or set a specific seed with `seed: 4321`
       },
 
-      clearContext: false // leave Jasmine Spec Runner output visible in browser
+      clearContext: false, // leave Jasmine Spec Runner output visible in browser
     },
     jasmineHtmlReporter: {
-      suppressAll: true // removes the duplicated traces
+      suppressAll: true, // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/weather-app'),
-      subdir: '.',
-      reporters: [
-        { type: 'html' },
-        { type: 'text-summary' }
-      ]
+      dir: require("path").join(__dirname, "./coverage/weather-app"),
+      subdir: ".",
+      reporters: [{ type: "html" }, { type: "text-summary" }],
     },
-    reporters: ['progress', 'kjhtml'],
-    browsers: ['ChromeHeadlessNoSandbox', 'Chrome'],
-    restartOnFileChange: true
-
+    reporters: ["progress", "kjhtml"],
+    browsers: ["ChromeHeadlessNoSandbox", "Chrome"],
+    restartOnFileChange: true,
   });
 };

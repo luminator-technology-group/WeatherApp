@@ -8,7 +8,7 @@ describe('WeatherTemperatureComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [WeatherTemperatureComponent]
+      declarations: [WeatherTemperatureComponent],
     });
     fixture = TestBed.createComponent(WeatherTemperatureComponent);
     component = fixture.componentInstance;

@@ -5,7 +5,10 @@ import { Coordinates } from '../app.model';
   selector: 'app-lat-lng',
   template: `
     <div *ngFor="let coordinate of coordinates">
-      <p> Latitude:{{ coordinate.latitude }} , Longitude: {{ coordinate.longitude }}</p>
+      <p>
+        Latitude:{{ coordinate.latitude }} , Longitude:
+        {{ coordinate.longitude }}
+      </p>
     </div>
   `,
   styleUrls: ['./lat-lng.component.scss'],

@@ -8,7 +8,7 @@ describe('StoplistComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [StoplistComponent]
+      declarations: [StoplistComponent],
     });
     fixture = TestBed.createComponent(StoplistComponent);
     component = fixture.componentInstance;

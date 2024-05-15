@@ -80,3 +80,18 @@ export interface StopData {
   offsetTime: number;
   expectedArrivalTime: string;
 }
+
+
+export interface WeatherForecast {
+  responseList: WeatherDataForecast[];
+}
+
+export interface WeatherDataForecast {
+  maxTemp: number;
+  minTemp: number;
+  pmean: string;
+  time: string;
+  winDir: number;
+  winSpd: number;
+  wsymb:number;
+}

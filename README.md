@@ -2,8 +2,7 @@
 
 ![Weather App](./src/assets/without-stopButton.png)
 
-The Weather App is a dynamic application designed to provide real-time weather updates for bus passengers. It fetches weather information based on the bus's GPS coordinates or the name of the city, ensuring passengers are informed about current weather conditions along their route. 
-
+The Weather App is a dynamic application designed to provide real-time weather updates for bus passengers. It fetches weather information based on the bus's GPS coordinates or the name of the city, ensuring passengers are informed about current weather conditions along their route.
 
 ## Features
 

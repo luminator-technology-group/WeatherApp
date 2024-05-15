@@ -7,6 +7,7 @@ import {
   StopData,
   WeatherCoordinates,
   WeatherData,
+  WeatherForecast,
 } from './app.model';
 import { CoordinatesService } from '../service/coordinates.service';
 import { StopButtonService } from '../service/stop-button.service';
@@ -20,6 +21,7 @@ import { HttpClient } from '@angular/common/http';
       <app-final-destination
         class="final-destination"
         [finalDestinationName]="finalDestinationName"
+        [weatherForecast]="weatherForecast"
       ></app-final-destination>
 
       <app-stop-button [stopPressed]="stopPressed"></app-stop-button>
@@ -54,6 +56,8 @@ export class AppComponent implements OnInit {
   weatherDataArray: WeatherData[] = [];
   cityName = '';
   weatherLookupType!: string;
+  days = 5;
+  weatherForecast: WeatherForecast[] = [];
 
   constructor(
     private apiService: ApiService,
@@ -76,15 +80,18 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.initConnection();
 
+    this.fetchForecast(this.latitude, this.longitude, this.days)
+
     this.fetchWeatherConfig();
 
-    if (this.weatherLookupType === 'Location Name') {
+    if (this.weatherLookupType === 'GPS') {
       this.fetWeatherCoordinates(this.latitude, this.longitude);
       return;
     }
     if (this.weatherLookupType === 'Location Name') {
       this.fetchWeatherByCityName(this.cityName);
     }
+    
   }
 
   fetchWeatherConfig() {
@@ -108,6 +115,7 @@ export class AppComponent implements OnInit {
             data: data,
           };
           this.weatherDataArray.push(weatherDataWithweatherLookupType);
+
         },
 
         error(err) {
@@ -124,6 +132,7 @@ export class AppComponent implements OnInit {
       .pipe(filter((data) => data !== undefined))
       .subscribe({
         next: (data) => {
+          console.log(data)
           const weatherDataWithLatLong = {
             weatherLookupType: this.weatherLookupType,
             latitude: latitude,
@@ -138,18 +147,41 @@ export class AppComponent implements OnInit {
       });
   }
 
+   // New method to fetch forecast
+   fetchForecast(latitude: number, longitude: number, days: number): void {
+    this.apiService
+      .getForecast(latitude, longitude, days) 
+      .pipe(filter((data) => data !== undefined))
+      .subscribe({
+        next: (forecastData) => {
+          console.log('Forecast Data:', forecastData);
+          this.weatherForecast = forecastData.responseList;
+        },
+        error: (err) => {
+          console.error('Error fetching forecast:', err);
+        }
+      });
+  }
+
+
+
   // connectet libpis with mqtt broker
   initConnection() {
     window.luminator.pis.init(this.mqttConfig);
 
     window.luminator.pis.client.updates().subscribe({
       next: (state: any) => {
+        console.log('State:', state);
         if (state) {
           this.handleButtonStopTopic(state);
         }
+        console.log('State before if ', state);
+        console.log('state.stopList before if ', state.__raw.stopList);
         if (state && state.stopList) {
+          console.log('inside State before if ', state);
+          console.log('inside state.stopList before if ', state.__raw.stopList);
           this.handleStopListData(state);
-          if (this.weatherLookupType === 'GPS') {
+          if (this.weatherLookupType === 'GPS') {        
             console.log('GPS');
             this.handleCoordinates(state);
             return;
@@ -158,6 +190,7 @@ export class AppComponent implements OnInit {
             console.log('Location Name');
             this.handleLocation(state);
           }
+          console.log('Data received:', state);
         } else {
           console.log('Waiting for data...');
         }
@@ -262,11 +295,25 @@ export class AppComponent implements OnInit {
     const parsedStopList = this.parseStopList(state.stopList);
     this.stops = parsedStopList;
     this.stopListService.updateStops(parsedStopList);
-    // get final destination name
-    this.finalDestinationName = state.finalDestinationName;
-    const retrievedStops = this.stopListService.getStops();
+    
+    // Get the last stop as the final destination
+    const lastStop = parsedStopList[parsedStopList.length - 1];
+    this.finalDestinationName = lastStop.name;
+    
+    
+    console.log("this.finalDestinationName", this.finalDestinationName)
+    // Log the final destination name for debugging
+    const lastStopCoordinates = {
+      latitude: lastStop.latitude,
+      longitude: lastStop.longitude
+    };
+  
+   // Get the coordinates of the last stop
+    if (this.finalDestinationName && lastStopCoordinates.latitude && lastStopCoordinates.longitude) {
+      this.fetchForecast(lastStopCoordinates.latitude, lastStopCoordinates.longitude, this.days);
+    }
   }
-
+  
   parseStopList(stopList: any): any[] {
     return stopList; // By default, it returns the unprocessed stop list
   }

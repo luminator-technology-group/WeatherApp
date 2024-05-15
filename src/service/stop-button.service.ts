@@ -8,7 +8,6 @@ export class StopButtonService {
   private stopButtonService = new Subject<boolean>();
   stopPressed = false;
 
-
   notifyButtonClick() {
     console.log('notifyButtonClick');
     this.stopPressed = true;

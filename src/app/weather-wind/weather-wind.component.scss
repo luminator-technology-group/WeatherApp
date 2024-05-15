@@ -1,14 +1,12 @@
-.wind-container{
-    display: flex;
-    gap: 0.625em;
+.wind-container {
+  display: flex;
+  gap: 0.625em;
 
-    .wind-icon{
-        width: 2em;
-    }
-    p{
-        font-weight: bold;
-        font-size: 2rem;
-    }
+  .wind-icon {
+    width: 2em;
+  }
+  p {
+    font-weight: bold;
+    font-size: 2rem;
+  }
 }
-
-

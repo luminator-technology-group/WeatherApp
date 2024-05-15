@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StopListService {
   private stops: any[] = [];
-
 
   updateStops(stops: any[]): void {
     this.stops = stops;

@@ -8,7 +8,7 @@ describe('CurrentTimeComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [CurrentTimeComponent]
+      declarations: [CurrentTimeComponent],
     });
     fixture = TestBed.createComponent(CurrentTimeComponent);
     component = fixture.componentInstance;

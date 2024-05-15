@@ -4,11 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --code-coverage --browsers Chrome",
-
     "test:ci": "ng test --code-coverage --no-watch --browsers ChromeHeadlessNoSandbox",
     "generate-api-clients": "openapi-generator-cli generate -g typescript-angular -i api-docs.json -o generated/api-clients",
     "format": "prettier --check .",
@@ -27,11 +25,8 @@
     "@angular/platform-browser": "^16.2.0",
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
-
     "@msetsuite/libpis": "^0.0.993",
-
     "paho-mqtt": "^1.1.0",
-
     "prettier": "^3.2.5",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
@@ -61,4 +56,3 @@
     "typescript": "~5.1.3"
   }
 }
-

@@ -8,7 +8,7 @@ describe('LatLngComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LatLngComponent]
+      declarations: [LatLngComponent],
     });
     fixture = TestBed.createComponent(LatLngComponent);
     component = fixture.componentInstance;

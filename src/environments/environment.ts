@@ -6,6 +6,9 @@ export const environment = {
   apiBasePathLocation:
     'https://backend01bbf643.ambitiouspond-18970074.northeurope.azurecontainerapps.io/dynamic-weather/api/weather/location',
 
+  apiForecast:
+  'https://backend01bbf643.ambitiouspond-18970074.northeurope.azurecontainerapps.io/dynamic-weather/api/weather/destination',
+
   mqtt: {
     hostname: 'luminator-realtime-emqx-dev-weu-01.westeurope.azurecontainer.io',
     port: 1884,

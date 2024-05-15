@@ -8,7 +8,7 @@ describe('StopButtonComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [StopButtonComponent]
+      declarations: [StopButtonComponent],
     });
     fixture = TestBed.createComponent(StopButtonComponent);
     component = fixture.componentInstance;

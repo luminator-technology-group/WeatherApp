@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {HttpClientModule} from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,8 +13,6 @@ import { CurrentTimeComponent } from './current-time/current-time.component';
 import { FinalDestinationComponent } from './final-destination/final-destination.component';
 import { StopButtonComponent } from './stop-button/stop-button.component';
 
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,14 +24,9 @@ import { StopButtonComponent } from './stop-button/stop-button.component';
     CurrentTimeComponent,
     FinalDestinationComponent,
     StopButtonComponent,
-
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-  ],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

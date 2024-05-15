@@ -1,22 +1,25 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>WeatherApp</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
-<body style="background-color: white;">
-  <app-root></app-root>
-</body>
-<script>
-const urlString = window.location.href
+  <head>
+    <meta charset="utf-8" />
+    <title>WeatherApp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  </head>
+  <body style="background-color: white">
+    <app-root></app-root>
+  </body>
+  <script>
+    const urlString = window.location.href;
     const url = new URL(urlString);
 
-          window.parent.postMessage({
-            app: 'WeatherApp',
-            instanceId: url.searchParams.get("instanceId"),
-            message: 'initialized'
-          }, '*');
-</script>
+    window.parent.postMessage(
+      {
+        app: "WeatherApp",
+        instanceId: url.searchParams.get("instanceId"),
+        message: "initialized",
+      },
+      "*",
+    );
+  </script>
 </html>
